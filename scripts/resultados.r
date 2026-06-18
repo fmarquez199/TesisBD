@@ -95,14 +95,17 @@ for (q in 1:22) {
   sd_w2 = c(sd_w2, desves_sd$Worker2, desves_cd$Worker2)
 }
 
-medias_tiempo[44] = mean(conDiseño$Tiempo[630:659])
-sd_tiempo[44] = sd(conDiseño$Tiempo[630:659])
-medias_coord[44] = mean(conDiseño$Manager[630:659])
-sd_coord[44] = sd(conDiseño$Manager[630:659])
-medias_w1[44] = mean(conDiseño$Worker1[630:659])
-sd_w1[44] = sd(conDiseño$Worker1[630:659])
-medias_w2[44] = mean(conDiseño$Worker2[630:659])
-sd_w2[44] = sd(conDiseño$Worker2[630:659])
+if (carga == "5G") {
+  medias_tiempo[44] = mean(conDiseño$Tiempo[630:659])
+  sd_tiempo[44] = sd(conDiseño$Tiempo[630:659])
+  medias_coord[44] = mean(conDiseño$Manager[630:659])
+  sd_coord[44] = sd(conDiseño$Manager[630:659])
+  medias_w1[44] = mean(conDiseño$Worker1[630:659])
+  sd_w1[44] = sd(conDiseño$Worker1[630:659])
+  medias_w2[44] = mean(conDiseño$Worker2[630:659])
+  sd_w2[44] = sd(conDiseño$Worker2[630:659])
+}
+
 medias_tiempo = medias_tiempo / 1000
 sd_tiempo = sd_tiempo / 1000
 medias_neto = medias_coord + medias_w1 + medias_w2
