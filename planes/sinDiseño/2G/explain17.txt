@@ -1,0 +1,656 @@
+SET
+                                                                                                      QUERY PLAN                                                                                                       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=250.00..250.01 rows=1 width=32) (actual time=27989.756..27989.757 rows=1 loops=1)
+   ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=32) (actual time=27989.737..27989.742 rows=32 loops=1)
+         Task Count: 32
+         Tuple data received from nodes: 448 bytes
+         Tasks Shown: All
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=100445.09..100445.10 rows=1 width=32) (actual time=27598.693..27598.695 rows=1 loops=1)
+                     ->  Hash Join  (cost=466.57..100444.77 rows=130 width=8) (actual time=1877.433..27598.599 rows=60 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 578
+                           ->  Seq Scan on lineitem_by_part_102068 lineitem_by_part  (cost=0.00..10996.54 rows=381654 width=17) (actual time=3.171..322.294 rows=381654 loops=1)
+                           ->  Hash  (cost=466.41..466.41 rows=13 width=4) (actual time=79.689..79.690 rows=20 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102196 part  (cost=0.00..466.41 rows=13 width=4) (actual time=69.997..79.667 rows=20 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12674
+                           SubPlan 1
+                             ->  Aggregate  (cost=8797.95..8797.97 rows=1 width=32) (actual time=42.480..42.480 rows=1 loops=638)
+                                   ->  Index Scan using lineitem_by_part_pkey_102068 on lineitem_by_part_102068 lineitem_by_part_1  (cost=0.42..8797.88 rows=30 width=5) (actual time=1.132..42.396 rows=33 loops=638)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 2.896 ms
+                   JIT:
+                     Functions: 25
+                     Options: Inlining false, Optimization false, Expressions true, Deforming true
+                     Timing: Generation 9.982 ms, Inlining 0.000 ms, Optimization 1.028 ms, Emission 68.776 ms, Total 79.786 ms
+                   Execution Time: 27660.317 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98783.92..98783.93 rows=1 width=32) (actual time=26861.363..26861.366 rows=1 loops=1)
+                     ->  Hash Join  (cost=445.06..98783.57 rows=140 width=8) (actual time=132.449..26861.299 rows=52 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 488
+                           ->  Seq Scan on lineitem_by_part_102050 lineitem_by_part  (cost=0.00..10805.58 rows=375358 width=17) (actual time=0.350..308.204 rows=375358 loops=1)
+                           ->  Hash  (cost=444.89..444.89 rows=14 width=4) (actual time=12.857..12.858 rows=17 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102178 part  (cost=0.00..444.89 rows=14 width=4) (actual time=0.286..12.825 rows=17 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12509
+                           SubPlan 1
+                             ->  Aggregate  (cost=8654.74..8654.75 rows=1 width=32) (actual time=48.875..48.876 rows=1 loops=540)
+                                   ->  Index Scan using lineitem_by_part_pkey_102050 on lineitem_by_part_102050 lineitem_by_part_1  (cost=0.42..8654.66 rows=30 width=5) (actual time=1.699..48.773 rows=33 loops=540)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 11.894 ms
+                   Execution Time: 26861.647 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98537.77..98537.78 rows=1 width=32) (actual time=26497.579..26497.582 rows=1 loops=1)
+                     ->  Hash Join  (cost=444.78..98537.42 rows=140 width=8) (actual time=566.890..26497.521 rows=43 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 444
+                           ->  Seq Scan on lineitem_by_part_102060 lineitem_by_part  (cost=0.00..10795.78 rows=374378 width=17) (actual time=0.330..341.982 rows=374378 loops=1)
+                           ->  Hash  (cost=444.61..444.61 rows=14 width=4) (actual time=12.904..12.904 rows=17 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102188 part  (cost=0.00..444.61 rows=14 width=4) (actual time=0.076..12.887 rows=17 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12490
+                           SubPlan 1
+                             ->  Aggregate  (cost=8631.39..8631.40 rows=1 width=32) (actual time=53.315..53.315 rows=1 loops=487)
+                                   ->  Index Scan using lineitem_by_part_pkey_102060 on lineitem_by_part_102060 lineitem_by_part_1  (cost=0.42..8631.31 rows=30 width=5) (actual time=1.867..53.254 rows=30 loops=487)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 4.649 ms
+                   Execution Time: 26497.703 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=97842.56..97842.57 rows=1 width=32) (actual time=26353.852..26353.855 rows=1 loops=1)
+                     ->  Hash Join  (cost=441.21..97842.28 rows=110 width=8) (actual time=322.771..26353.800 rows=42 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 453
+                           ->  Seq Scan on lineitem_by_part_102072 lineitem_by_part  (cost=0.00..10705.81 rows=371781 width=17) (actual time=1.305..396.734 rows=371781 loops=1)
+                           ->  Hash  (cost=441.07..441.07 rows=11 width=4) (actual time=9.236..9.236 rows=16 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102200 part  (cost=0.00..441.07 rows=11 width=4) (actual time=0.114..9.218 rows=16 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12389
+                           SubPlan 1
+                             ->  Aggregate  (cost=8571.91..8571.92 rows=1 width=32) (actual time=52.006..52.006 rows=1 loops=495)
+                                   ->  Index Scan using lineitem_by_part_pkey_102072 on lineitem_by_part_102072 lineitem_by_part_1  (cost=0.42..8571.83 rows=30 width=5) (actual time=1.650..51.926 rows=31 loops=495)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 5.582 ms
+                   Execution Time: 26353.966 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98789.66..98789.67 rows=1 width=32) (actual time=26115.054..26115.057 rows=1 loops=1)
+                     ->  Hash Join  (cost=444.89..98789.35 rows=120 width=8) (actual time=581.621..26115.011 rows=35 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 435
+                           ->  Seq Scan on lineitem_by_part_102044 lineitem_by_part  (cost=0.00..10806.26 rows=375426 width=17) (actual time=0.393..413.530 rows=375426 loops=1)
+                           ->  Hash  (cost=444.74..444.74 rows=12 width=4) (actual time=12.460..12.460 rows=15 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102172 part  (cost=0.00..444.74 rows=12 width=4) (actual time=0.350..12.397 rows=15 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12501
+                           SubPlan 1
+                             ->  Aggregate  (cost=8655.25..8655.26 rows=1 width=32) (actual time=54.252..54.252 rows=1 loops=470)
+                                   ->  Index Scan using lineitem_by_part_pkey_102044 on lineitem_by_part_102044 lineitem_by_part_1  (cost=0.42..8655.17 rows=30 width=5) (actual time=2.152..54.159 rows=32 loops=470)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 4.530 ms
+                   Execution Time: 26115.370 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98838.95..98838.96 rows=1 width=32) (actual time=26022.951..26022.954 rows=1 loops=1)
+                     ->  Hash Join  (cost=444.69..98838.62 rows=130 width=8) (actual time=1260.169..26022.898 rows=44 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 433
+                           ->  Seq Scan on lineitem_by_part_102062 lineitem_by_part  (cost=0.00..10807.34 rows=375534 width=17) (actual time=2.418..314.543 rows=375534 loops=1)
+                           ->  Hash  (cost=444.53..444.53 rows=13 width=4) (actual time=5.882..5.883 rows=16 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102190 part  (cost=0.00..444.53 rows=13 width=4) (actual time=0.038..4.918 rows=16 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12486
+                           SubPlan 1
+                             ->  Aggregate  (cost=8660.06..8660.07 rows=1 width=32) (actual time=53.369..53.369 rows=1 loops=477)
+                                   ->  Index Scan using lineitem_by_part_pkey_102062 on lineitem_by_part_102062 lineitem_by_part_1  (cost=0.42..8659.98 rows=30 width=5) (actual time=1.564..53.303 rows=31 loops=477)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 13.826 ms
+                   Execution Time: 26023.117 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99051.33..99051.34 rows=1 width=32) (actual time=25737.531..25737.533 rows=1 loops=1)
+                     ->  Hash Join  (cost=446.51..99051.05 rows=110 width=8) (actual time=515.716..25737.477 rows=45 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 397
+                           ->  Seq Scan on lineitem_by_part_102074 lineitem_by_part  (cost=0.00..10878.94 rows=376294 width=17) (actual time=0.841..409.048 rows=376294 loops=1)
+                           ->  Hash  (cost=446.37..446.37 rows=11 width=4) (actual time=23.900..23.901 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102202 part  (cost=0.00..446.37 rows=11 width=4) (actual time=0.273..23.878 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12544
+                           SubPlan 1
+                             ->  Aggregate  (cost=8673.76..8673.77 rows=1 width=32) (actual time=56.706..56.706 rows=1 loops=442)
+                                   ->  Index Scan using lineitem_by_part_pkey_102074 on lineitem_by_part_102074 lineitem_by_part_1  (cost=0.42..8673.68 rows=30 width=5) (actual time=1.286..56.537 rows=32 loops=442)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 9.744 ms
+                   Execution Time: 25737.651 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99477.02..99477.03 rows=1 width=32) (actual time=25406.745..25406.748 rows=1 loops=1)
+                     ->  Hash Join  (cost=448.55..99476.69 rows=130 width=8) (actual time=1075.992..25406.698 rows=33 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 375
+                           ->  Seq Scan on lineitem_by_part_102046 lineitem_by_part  (cost=0.00..10895.33 rows=377933 width=17) (actual time=0.464..497.566 rows=377933 loops=1)
+                           ->  Hash  (cost=448.39..448.39 rows=13 width=4) (actual time=10.715..10.717 rows=13 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102174 part  (cost=0.00..448.39 rows=13 width=4) (actual time=0.262..10.655 rows=13 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12613
+                           SubPlan 1
+                             ->  Aggregate  (cost=8714.05..8714.06 rows=1 width=32) (actual time=60.645..60.645 rows=1 loops=408)
+                                   ->  Index Scan using lineitem_by_part_pkey_102046 on lineitem_by_part_102046 lineitem_by_part_1  (cost=0.42..8713.97 rows=30 width=5) (actual time=1.264..60.472 rows=32 loops=408)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 6.563 ms
+                   Execution Time: 25407.184 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99552.71..99552.72 rows=1 width=32) (actual time=24203.782..24203.785 rows=1 loops=1)
+                     ->  Hash Join  (cost=448.25..99552.41 rows=120 width=8) (actual time=1397.746..24203.738 rows=33 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 399
+                           ->  Seq Scan on lineitem_by_part_102053 lineitem_by_part  (cost=0.00..10899.44 rows=378344 width=17) (actual time=0.131..208.761 rows=378344 loops=1)
+                           ->  Hash  (cost=448.11..448.11 rows=12 width=4) (actual time=18.353..18.354 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102181 part  (cost=0.00..448.11 rows=12 width=4) (actual time=0.389..18.328 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12593
+                           SubPlan 1
+                             ->  Aggregate  (cost=8721.13..8721.14 rows=1 width=32) (actual time=55.038..55.038 rows=1 loops=432)
+                                   ->  Index Scan using lineitem_by_part_pkey_102053 on lineitem_by_part_102053 lineitem_by_part_1  (cost=0.42..8721.05 rows=30 width=5) (actual time=1.199..54.928 rows=32 loops=432)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 7.664 ms
+                   Execution Time: 24203.913 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99492.90..99492.91 rows=1 width=32) (actual time=23958.306..23958.309 rows=1 loops=1)
+                     ->  Hash Join  (cost=446.67..99492.60 rows=120 width=8) (actual time=2014.556..23958.250 rows=43 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 383
+                           ->  Seq Scan on lineitem_by_part_102059 lineitem_by_part  (cost=0.00..10897.36 rows=378136 width=17) (actual time=0.081..255.386 rows=378136 loops=1)
+                           ->  Hash  (cost=446.52..446.52 rows=12 width=4) (actual time=16.358..16.358 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102187 part  (cost=0.00..446.52 rows=12 width=4) (actual time=0.198..16.347 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12554
+                           SubPlan 1
+                             ->  Aggregate  (cost=8715.57..8715.58 rows=1 width=32) (actual time=55.160..55.160 rows=1 loops=426)
+                                   ->  Index Scan using lineitem_by_part_pkey_102059 on lineitem_by_part_102059 lineitem_by_part_1  (cost=0.42..8715.49 rows=30 width=5) (actual time=0.992..55.060 rows=31 loops=426)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.387 ms
+                   Execution Time: 23958.416 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99044.69..99044.70 rows=1 width=32) (actual time=23926.328..23926.331 rows=1 loops=1)
+                     ->  Hash Join  (cost=445.19..99044.37 rows=130 width=8) (actual time=367.707..23926.286 rows=36 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 362
+                           ->  Seq Scan on lineitem_by_part_102051 lineitem_by_part  (cost=0.00..10878.33 rows=376233 width=17) (actual time=0.015..344.814 rows=376233 loops=1)
+                           ->  Hash  (cost=445.02..445.02 rows=13 width=4) (actual time=6.608..6.608 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102179 part  (cost=0.00..445.02 rows=13 width=4) (actual time=0.155..6.594 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12521
+                           SubPlan 1
+                             ->  Aggregate  (cost=8673.30..8673.31 rows=1 width=32) (actual time=58.702..58.702 rows=1 loops=398)
+                                   ->  Index Scan using lineitem_by_part_pkey_102051 on lineitem_by_part_102051 lineitem_by_part_1  (cost=0.42..8673.22 rows=30 width=5) (actual time=1.720..58.589 rows=29 loops=398)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.583 ms
+                   Execution Time: 23926.504 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99048.61..99048.62 rows=1 width=32) (actual time=23915.900..23915.903 rows=1 loops=1)
+                     ->  Hash Join  (cost=445.01..99048.29 rows=130 width=8) (actual time=331.046..23915.850 rows=42 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 375
+                           ->  Seq Scan on lineitem_by_part_102069 lineitem_by_part  (cost=0.00..10878.79 rows=376279 width=17) (actual time=0.022..339.204 rows=376279 loops=1)
+                           ->  Hash  (cost=444.85..444.85 rows=13 width=4) (actual time=19.521..19.522 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102197 part  (cost=0.00..444.85 rows=13 width=4) (actual time=8.440..19.504 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12509
+                           SubPlan 1
+                             ->  Aggregate  (cost=8673.65..8673.66 rows=1 width=32) (actual time=56.127..56.127 rows=1 loops=417)
+                                   ->  Index Scan using lineitem_by_part_pkey_102069 on lineitem_by_part_102069 lineitem_by_part_1  (cost=0.42..8673.57 rows=30 width=5) (actual time=1.863..56.047 rows=31 loops=417)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.648 ms
+                   Execution Time: 23916.037 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98339.51..98339.52 rows=1 width=32) (actual time=23800.400..23800.403 rows=1 loops=1)
+                     ->  Hash Join  (cost=443.05..98339.18 rows=130 width=8) (actual time=224.847..23800.348 rows=42 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 361
+                           ->  Seq Scan on lineitem_by_part_102045 lineitem_by_part  (cost=0.00..10787.05 rows=373505 width=17) (actual time=0.060..321.419 rows=373505 loops=1)
+                           ->  Hash  (cost=442.88..442.88 rows=13 width=4) (actual time=17.277..17.277 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102173 part  (cost=0.00..442.88 rows=13 width=4) (actual time=0.173..17.217 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12445
+                           SubPlan 1
+                             ->  Aggregate  (cost=8612.84..8612.85 rows=1 width=32) (actual time=57.765..57.765 rows=1 loops=403)
+                                   ->  Index Scan using lineitem_by_part_pkey_102045 on lineitem_by_part_102045 lineitem_by_part_1  (cost=0.42..8612.76 rows=30 width=5) (actual time=1.926..57.642 rows=31 loops=403)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 9.129 ms
+                   Execution Time: 23800.777 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99114.71..99114.72 rows=1 width=32) (actual time=23767.938..23767.940 rows=1 loops=1)
+                     ->  Hash Join  (cost=446.82..99114.39 rows=130 width=8) (actual time=372.699..23767.891 rows=34 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 352
+                           ->  Seq Scan on lineitem_by_part_102047 lineitem_by_part  (cost=0.00..10881.57 rows=376557 width=17) (actual time=0.068..345.624 rows=376557 loops=1)
+                           ->  Hash  (cost=446.65..446.65 rows=13 width=4) (actual time=12.958..12.959 rows=12 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102175 part  (cost=0.00..446.65 rows=13 width=4) (actual time=0.611..12.915 rows=12 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12565
+                           SubPlan 1
+                             ->  Aggregate  (cost=8679.73..8679.74 rows=1 width=32) (actual time=60.216..60.216 rows=1 loops=386)
+                                   ->  Index Scan using lineitem_by_part_pkey_102047 on lineitem_by_part_102047 lineitem_by_part_1  (cost=0.42..8679.65 rows=30 width=5) (actual time=1.699..60.148 rows=33 loops=386)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 5.669 ms
+                   Execution Time: 23768.354 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=97398.28..97398.29 rows=1 width=32) (actual time=23736.923..23736.926 rows=1 loops=1)
+                     ->  Hash Join  (cost=437.93..97397.95 rows=130 width=8) (actual time=66.474..23736.865 rows=47 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 327
+                           ->  Seq Scan on lineitem_by_part_102052 lineitem_by_part  (cost=0.00..10687.43 rows=369943 width=17) (actual time=0.285..493.173 rows=369943 loops=1)
+                           ->  Hash  (cost=437.77..437.77 rows=13 width=4) (actual time=8.256..8.257 rows=12 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102180 part  (cost=0.00..437.77 rows=13 width=4) (actual time=1.126..8.236 rows=12 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12306
+                           SubPlan 1
+                             ->  Aggregate  (cost=8530.12..8530.14 rows=1 width=32) (actual time=61.616..61.616 rows=1 loops=374)
+                                   ->  Index Scan using lineitem_by_part_pkey_102052 on lineitem_by_part_102052 lineitem_by_part_1  (cost=0.42..8530.05 rows=30 width=5) (actual time=2.432..61.478 rows=31 loops=374)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 7.732 ms
+                   Execution Time: 23739.157 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99482.72..99482.73 rows=1 width=32) (actual time=23702.817..23702.820 rows=1 loops=1)
+                     ->  Hash Join  (cost=448.27..99482.36 rows=140 width=8) (actual time=177.388..23702.777 rows=34 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 347
+                           ->  Seq Scan on lineitem_by_part_102054 lineitem_by_part  (cost=0.00..10896.01 rows=378001 width=17) (actual time=6.537..331.875 rows=378001 loops=1)
+                           ->  Hash  (cost=448.09..448.09 rows=14 width=4) (actual time=6.569..6.570 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102182 part  (cost=0.00..448.09 rows=14 width=4) (actual time=3.014..6.549 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12592
+                           SubPlan 1
+                             ->  Aggregate  (cost=8714.56..8714.57 rows=1 width=32) (actual time=60.884..60.884 rows=1 loops=381)
+                                   ->  Index Scan using lineitem_by_part_pkey_102054 on lineitem_by_part_102054 lineitem_by_part_1  (cost=0.42..8714.48 rows=30 width=5) (actual time=1.768..60.758 rows=29 loops=381)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 7.483 ms
+                   Execution Time: 23703.007 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=97268.39..97268.40 rows=1 width=32) (actual time=23638.007..23638.010 rows=1 loops=1)
+                     ->  Hash Join  (cost=437.81..97268.06 rows=130 width=8) (actual time=1153.708..23637.963 rows=34 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 378
+                           ->  Seq Scan on lineitem_by_part_102057 lineitem_by_part  (cost=0.00..10681.75 rows=369375 width=17) (actual time=0.017..289.456 rows=369375 loops=1)
+                           ->  Hash  (cost=437.65..437.65 rows=13 width=4) (actual time=23.473..23.474 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102185 part  (cost=0.00..437.65 rows=13 width=4) (actual time=0.260..23.460 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12296
+                           SubPlan 1
+                             ->  Aggregate  (cost=8517.86..8517.88 rows=1 width=32) (actual time=56.069..56.069 rows=1 loops=412)
+                                   ->  Index Scan using lineitem_by_part_pkey_102057 on lineitem_by_part_102057 lineitem_by_part_1  (cost=0.42..8517.78 rows=30 width=5) (actual time=2.352..55.995 rows=31 loops=412)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.556 ms
+                   Execution Time: 23638.130 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98468.33..98468.34 rows=1 width=32) (actual time=23554.682..23554.685 rows=1 loops=1)
+                     ->  Hash Join  (cost=443.02..98468.05 rows=110 width=8) (actual time=561.455..23554.642 rows=36 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 368
+                           ->  Seq Scan on lineitem_by_part_102063 lineitem_by_part  (cost=0.00..10792.63 rows=374063 width=17) (actual time=0.015..368.723 rows=374063 loops=1)
+                           ->  Hash  (cost=442.88..442.88 rows=11 width=4) (actual time=12.070..12.071 rows=14 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102191 part  (cost=0.00..442.88 rows=11 width=4) (actual time=0.185..12.054 rows=14 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12445
+                           SubPlan 1
+                             ->  Aggregate  (cost=8625.02..8625.04 rows=1 width=32) (actual time=57.000..57.000 rows=1 loops=404)
+                                   ->  Index Scan using lineitem_by_part_pkey_102063 on lineitem_by_part_102063 lineitem_by_part_1  (cost=0.42..8624.94 rows=30 width=5) (actual time=2.138..56.940 rows=30 loops=404)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 7.714 ms
+                   Execution Time: 23554.811 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99288.98..99288.99 rows=1 width=32) (actual time=23369.976..23369.979 rows=1 loops=1)
+                     ->  Hash Join  (cost=446.94..99288.68 rows=120 width=8) (actual time=225.443..23369.933 rows=33 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 313
+                           ->  Seq Scan on lineitem_by_part_102048 lineitem_by_part  (cost=0.00..10887.75 rows=377175 width=17) (actual time=1.484..401.200 rows=377175 loops=1)
+                           ->  Hash  (cost=446.79..446.79 rows=12 width=4) (actual time=19.495..19.496 rows=11 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102176 part  (cost=0.00..446.79 rows=12 width=4) (actual time=0.103..19.450 rows=11 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12575
+                           SubPlan 1
+                             ->  Aggregate  (cost=8696.36..8696.38 rows=1 width=32) (actual time=65.759..65.785 rows=1 loops=346)
+                                   ->  Index Scan using lineitem_by_part_pkey_102048 on lineitem_by_part_102048 lineitem_by_part_1  (cost=0.42..8696.29 rows=30 width=5) (actual time=1.563..65.568 rows=32 loops=346)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 6.779 ms
+                   Execution Time: 23370.411 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99920.52..99920.53 rows=1 width=32) (actual time=23280.580..23280.584 rows=1 loops=1)
+                     ->  Hash Join  (cost=448.64..99920.19 rows=130 width=8) (actual time=362.061..23280.538 rows=35 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 307
+                           ->  Seq Scan on lineitem_by_part_102058 lineitem_by_part  (cost=0.00..10975.24 rows=379524 width=17) (actual time=4.120..461.164 rows=379524 loops=1)
+                           ->  Hash  (cost=448.48..448.48 rows=13 width=4) (actual time=15.252..15.253 rows=11 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102186 part  (cost=0.00..448.48 rows=13 width=4) (actual time=0.051..15.242 rows=11 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12621
+                           SubPlan 1
+                             ->  Aggregate  (cost=8749.98..8749.99 rows=1 width=32) (actual time=65.960..65.960 rows=1 loops=342)
+                                   ->  Index Scan using lineitem_by_part_pkey_102058 on lineitem_by_part_102058 lineitem_by_part_1  (cost=0.42..8749.90 rows=30 width=5) (actual time=1.511..65.861 rows=32 loops=342)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 3.082 ms
+                   Execution Time: 23280.695 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98650.96..98650.97 rows=1 width=32) (actual time=22681.478..22681.482 rows=1 loops=1)
+                     ->  Hash Join  (cost=443.35..98650.69 rows=110 width=8) (actual time=399.505..22678.430 rows=27 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 322
+                           ->  Seq Scan on lineitem_by_part_102066 lineitem_by_part  (cost=0.00..10799.74 rows=374774 width=17) (actual time=4.913..382.943 rows=374774 loops=1)
+                           ->  Hash  (cost=443.22..443.22 rows=11 width=4) (actual time=11.396..11.398 rows=12 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102194 part  (cost=0.00..443.22 rows=11 width=4) (actual time=1.282..11.279 rows=12 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12469
+                           SubPlan 1
+                             ->  Aggregate  (cost=8642.36..8642.37 rows=1 width=32) (actual time=63.170..63.170 rows=1 loops=349)
+                                   ->  Index Scan using lineitem_by_part_pkey_102066 on lineitem_by_part_102066 lineitem_by_part_1  (cost=0.42..8642.28 rows=30 width=5) (actual time=2.737..63.046 rows=29 loops=349)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 9.617 ms
+                   Execution Time: 22681.588 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99987.85..99987.86 rows=1 width=32) (actual time=22299.648..22299.651 rows=1 loops=1)
+                     ->  Hash Join  (cost=448.81..99987.52 rows=130 width=8) (actual time=587.890..22299.614 rows=28 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 299
+                           ->  Seq Scan on lineitem_by_part_102065 lineitem_by_part  (cost=0.00..10978.34 rows=379834 width=17) (actual time=0.015..356.018 rows=379834 loops=1)
+                           ->  Hash  (cost=448.64..448.64 rows=13 width=4) (actual time=21.526..21.527 rows=12 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102193 part  (cost=0.00..448.64 rows=13 width=4) (actual time=0.129..21.514 rows=12 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12631
+                           SubPlan 1
+                             ->  Aggregate  (cost=8756.31..8756.32 rows=1 width=32) (actual time=66.425..66.425 rows=1 loops=327)
+                                   ->  Index Scan using lineitem_by_part_pkey_102065 on lineitem_by_part_102065 lineitem_by_part_1  (cost=0.42..8756.23 rows=30 width=5) (actual time=2.420..66.293 rows=28 loops=327)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.380 ms
+                   Execution Time: 22299.775 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98738.05..98738.06 rows=1 width=32) (actual time=22268.016..22268.019 rows=1 loops=1)
+                     ->  Hash Join  (cost=443.55..98737.77 rows=110 width=8) (actual time=363.384..22267.979 rows=29 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 290
+                           ->  Seq Scan on lineitem_by_part_102061 lineitem_by_part  (cost=0.00..10803.08 rows=375108 width=17) (actual time=0.018..443.571 rows=375108 loops=1)
+                           ->  Hash  (cost=443.41..443.41 rows=11 width=4) (actual time=12.174..12.175 rows=11 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102189 part  (cost=0.00..443.41 rows=11 width=4) (actual time=0.090..12.163 rows=11 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12483
+                           SubPlan 1
+                             ->  Aggregate  (cost=8650.62..8650.64 rows=1 width=32) (actual time=67.770..67.770 rows=1 loops=319)
+                                   ->  Index Scan using lineitem_by_part_pkey_102061 on lineitem_by_part_102061 lineitem_by_part_1  (cost=0.42..8650.54 rows=31 width=5) (actual time=1.958..67.696 rows=31 loops=319)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 13.551 ms
+                   Execution Time: 22268.133 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99032.07..99032.08 rows=1 width=32) (actual time=22083.088..22083.091 rows=1 loops=1)
+                     ->  Hash Join  (cost=446.56..99031.72 rows=140 width=8) (actual time=411.722..22083.053 rows=28 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 293
+                           ->  Seq Scan on lineitem_by_part_102071 lineitem_by_part  (cost=0.00..10876.73 rows=376073 width=17) (actual time=0.019..320.643 rows=376073 loops=1)
+                           ->  Hash  (cost=446.38..446.38 rows=14 width=4) (actual time=25.440..25.441 rows=10 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102199 part  (cost=0.00..446.38 rows=14 width=4) (actual time=9.865..25.418 rows=10 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12549
+                           SubPlan 1
+                             ->  Aggregate  (cost=8672.10..8672.11 rows=1 width=32) (actual time=67.158..67.158 rows=1 loops=321)
+                                   ->  Index Scan using lineitem_by_part_pkey_102071 on lineitem_by_part_102071 lineitem_by_part_1  (cost=0.42..8672.02 rows=30 width=5) (actual time=2.600..67.025 rows=34 loops=321)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.534 ms
+                   Execution Time: 22083.226 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98732.76..98732.77 rows=1 width=32) (actual time=21296.018..21296.021 rows=1 loops=1)
+                     ->  Hash Join  (cost=444.62..98732.46 rows=120 width=8) (actual time=381.054..21295.977 rows=29 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 274
+                           ->  Seq Scan on lineitem_by_part_102073 lineitem_by_part  (cost=0.00..10804.36 rows=375236 width=17) (actual time=0.027..363.848 rows=375236 loops=1)
+                           ->  Hash  (cost=444.47..444.47 rows=12 width=4) (actual time=10.499..10.500 rows=10 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102201 part  (cost=0.00..444.47 rows=12 width=4) (actual time=0.345..10.484 rows=10 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12488
+                           SubPlan 1
+                             ->  Aggregate  (cost=8649.82..8649.83 rows=1 width=32) (actual time=68.288..68.288 rows=1 loops=303)
+                                   ->  Index Scan using lineitem_by_part_pkey_102073 on lineitem_by_part_102073 lineitem_by_part_1  (cost=0.42..8649.74 rows=30 width=5) (actual time=2.587..68.170 rows=31 loops=303)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 8.774 ms
+                   Execution Time: 21296.150 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98908.02..98908.03 rows=1 width=32) (actual time=20963.157..20963.160 rows=1 loops=1)
+                     ->  Hash Join  (cost=445.22..98907.69 rows=130 width=8) (actual time=570.897..20963.115 rows=35 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 281
+                           ->  Seq Scan on lineitem_by_part_102043 lineitem_by_part  (cost=0.00..10810.59 rows=375859 width=17) (actual time=0.053..354.745 rows=375859 loops=1)
+                           ->  Hash  (cost=445.06..445.06 rows=13 width=4) (actual time=6.580..6.582 rows=11 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102171 part  (cost=0.00..445.06 rows=13 width=4) (actual time=0.429..6.556 rows=11 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12526
+                           SubPlan 1
+                             ->  Aggregate  (cost=8666.50..8666.51 rows=1 width=32) (actual time=64.518..64.518 rows=1 loops=316)
+                                   ->  Index Scan using lineitem_by_part_pkey_102043 on lineitem_by_part_102043 lineitem_by_part_1  (cost=0.42..8666.42 rows=30 width=5) (actual time=1.894..64.363 rows=30 loops=316)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 3.961 ms
+                   Execution Time: 20963.461 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98230.37..98230.38 rows=1 width=32) (actual time=19566.747..19566.750 rows=1 loops=1)
+                     ->  Hash Join  (cost=441.51..98230.04 rows=130 width=8) (actual time=1540.026..19566.716 rows=23 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 255
+                           ->  Seq Scan on lineitem_by_part_102055 lineitem_by_part  (cost=0.00..10783.90 rows=373190 width=17) (actual time=0.021..315.461 rows=373190 loops=1)
+                           ->  Hash  (cost=441.35..441.35 rows=13 width=4) (actual time=12.077..12.078 rows=9 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102183 part  (cost=0.00..441.35 rows=13 width=4) (actual time=0.164..12.071 rows=9 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12414
+                           SubPlan 1
+                             ->  Aggregate  (cost=8602.48..8602.49 rows=1 width=32) (actual time=68.251..68.251 rows=1 loops=278)
+                                   ->  Index Scan using lineitem_by_part_pkey_102055 on lineitem_by_part_102055 lineitem_by_part_1  (cost=0.42..8602.40 rows=30 width=5) (actual time=2.980..67.998 rows=32 loops=278)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 20.083 ms
+                   Execution Time: 19566.861 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=95308.86..95308.87 rows=1 width=32) (actual time=19361.694..19361.697 rows=1 loops=1)
+                     ->  Hash Join  (cost=429.60..95308.54 rows=130 width=8) (actual time=1262.079..19361.662 rows=25 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 260
+                           ->  Seq Scan on lineitem_by_part_102067 lineitem_by_part  (cost=0.00..10416.79 rows=362079 width=17) (actual time=0.019..474.019 rows=362079 loops=1)
+                           ->  Hash  (cost=429.44..429.44 rows=13 width=4) (actual time=21.994..21.995 rows=9 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102195 part  (cost=0.00..429.44 rows=13 width=4) (actual time=9.634..21.980 rows=9 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12087
+                           SubPlan 1
+                             ->  Aggregate  (cost=8351.14..8351.16 rows=1 width=32) (actual time=65.585..65.585 rows=1 loops=285)
+                                   ->  Index Scan using lineitem_by_part_pkey_102067 on lineitem_by_part_102067 lineitem_by_part_1  (cost=0.42..8351.06 rows=30 width=5) (actual time=2.748..65.410 rows=32 loops=285)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 1.519 ms
+                   Execution Time: 19361.916 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=99114.69..99114.70 rows=1 width=32) (actual time=18796.524..18796.528 rows=1 loops=1)
+                     ->  Hash Join  (cost=446.58..99114.41 rows=110 width=8) (actual time=293.033..18796.489 rows=28 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 227
+                           ->  Seq Scan on lineitem_by_part_102056 lineitem_by_part  (cost=0.00..10881.60 rows=376560 width=17) (actual time=1.590..522.253 rows=376560 loops=1)
+                           ->  Hash  (cost=446.44..446.44 rows=11 width=4) (actual time=15.787..15.788 rows=8 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102184 part  (cost=0.00..446.44 rows=11 width=4) (actual time=0.149..15.774 rows=8 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12555
+                           SubPlan 1
+                             ->  Aggregate  (cost=8679.75..8679.76 rows=1 width=32) (actual time=70.997..70.997 rows=1 loops=255)
+                                   ->  Index Scan using lineitem_by_part_pkey_102056 on lineitem_by_part_102056 lineitem_by_part_1  (cost=0.42..8679.67 rows=30 width=5) (actual time=2.897..70.847 rows=34 loops=255)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 3.083 ms
+                   Execution Time: 18796.639 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=98217.61..98217.62 rows=1 width=32) (actual time=16776.925..16776.928 rows=1 loops=1)
+                     ->  Hash Join  (cost=442.99..98217.33 rows=110 width=8) (actual time=698.625..16776.906 rows=12 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 207
+                           ->  Seq Scan on lineitem_by_part_102064 lineitem_by_part  (cost=0.00..10782.28 rows=373028 width=17) (actual time=5.427..391.593 rows=373028 loops=1)
+                           ->  Hash  (cost=442.86..442.86 rows=11 width=4) (actual time=5.127..5.128 rows=7 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102192 part  (cost=0.00..442.86 rows=11 width=4) (actual time=0.190..5.116 rows=7 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12450
+                           SubPlan 1
+                             ->  Aggregate  (cost=8601.26..8601.27 rows=1 width=32) (actual time=73.756..73.756 rows=1 loops=219)
+                                   ->  Index Scan using lineitem_by_part_pkey_102064 on lineitem_by_part_102064 lineitem_by_part_1  (cost=0.42..8601.18 rows=30 width=5) (actual time=0.777..73.588 rows=32 loops=219)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 5.481 ms
+                   Execution Time: 16777.046 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  Aggregate  (cost=97214.85..97214.86 rows=1 width=32) (actual time=12745.448..12745.452 rows=1 loops=1)
+                     ->  Hash Join  (cost=437.95..97214.54 rows=120 width=8) (actual time=143.434..12745.424 rows=15 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 158
+                           ->  Seq Scan on lineitem_by_part_102049 lineitem_by_part  (cost=0.00..10680.19 rows=369219 width=17) (actual time=0.026..400.101 rows=369219 loops=1)
+                           ->  Hash  (cost=437.80..437.80 rows=12 width=4) (actual time=7.077..7.079 rows=6 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102177 part  (cost=0.00..437.80 rows=12 width=4) (actual time=1.336..7.062 rows=6 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12314
+                           SubPlan 1
+                             ->  Aggregate  (cost=8512.69..8512.71 rows=1 width=32) (actual time=70.218..70.218 rows=1 loops=173)
+                                   ->  Index Scan using lineitem_by_part_pkey_102049 on lineitem_by_part_102049 lineitem_by_part_1  (cost=0.42..8512.62 rows=30 width=5) (actual time=3.175..70.132 rows=29 loops=173)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 3.240 ms
+                   Execution Time: 12745.624 ms
+         ->  Task
+               Tuple data received from node: 14 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  Aggregate  (cost=97781.93..97781.94 rows=1 width=32) (actual time=11756.571..11756.574 rows=1 loops=1)
+                     ->  Hash Join  (cost=441.39..97781.60 rows=130 width=8) (actual time=662.938..11756.553 rows=12 loops=1)
+                           Hash Cond: (lineitem_by_part.l_partkey = part.p_partkey)
+                           Join Filter: (lineitem_by_part.l_quantity < (SubPlan 1))
+                           Rows Removed by Join Filter: 145
+                           ->  Seq Scan on lineitem_by_part_102070 lineitem_by_part  (cost=0.00..10703.43 rows=371543 width=17) (actual time=1.157..498.860 rows=371543 loops=1)
+                           ->  Hash  (cost=441.23..441.23 rows=13 width=4) (actual time=11.904..11.905 rows=5 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 ->  Seq Scan on part_102198 part  (cost=0.00..441.23 rows=13 width=4) (actual time=1.610..11.895 rows=5 loops=1)
+                                       Filter: ((p_brand = 'Brand#23'::bpchar) AND (p_container = 'MED BOX'::bpchar))
+                                       Rows Removed by Filter: 12410
+                           SubPlan 1
+                             ->  Aggregate  (cost=8566.12..8566.14 rows=1 width=32) (actual time=70.636..70.636 rows=1 loops=157)
+                                   ->  Index Scan using lineitem_by_part_pkey_102070 on lineitem_by_part_102070 lineitem_by_part_1  (cost=0.42..8566.05 rows=30 width=5) (actual time=2.996..70.539 rows=33 loops=157)
+                                         Index Cond: (l_partkey = part.p_partkey)
+                   Planning Time: 9.661 ms
+                   Execution Time: 11756.717 ms
+ Planning Time: 4.511 ms
+ Execution Time: 27989.906 ms
+(651 rows)
+

@@ -1,0 +1,779 @@
+SET
+                                                                                                          QUERY PLAN                                                                                                          
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=0 width=0) (actual time=547.793..548.007 rows=3543 loops=1)
+   ->  Distributed Subplan 1_1
+         Subplan Duration: 4106844.18 ms
+         Intermediate Data Size: 1153 kB
+         Result destination: Send to 3 nodes
+         ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=4) (actual time=4080129.751..4080140.790 rows=118043 loops=1)
+               Task Count: 32
+               Tuple data received from nodes: 461 kB
+               Tasks Shown: All
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..438380314.21 rows=1692 width=4) (actual time=1638.748..4080050.911 rows=3908 loops=1)
+                           ->  Seq Scan on part_102196 part  (cost=0.00..4150.55 rows=1269 width=4) (actual time=880.896..1088.844 rows=1417 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 124227
+                           ->  Index Scan using partsupp_pkey_102228 on partsupp_102228 partsupp  (cost=0.42..345450.08 rows=1 width=8) (actual time=1056.426..2878.574 rows=3 loops=1417)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86359.74..86359.75 rows=1 width=32) (actual time=718.779..718.779 rows=1 loops=5668)
+                                         ->  Index Scan using lineitem_by_part_pkey_102068 on lineitem_by_part_102068 lineitem_by_part  (cost=0.43..86359.73 rows=1 width=5) (actual time=424.360..718.740 rows=1 loops=5668)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.858 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 3.476 ms, Inlining 114.464 ms, Optimization 457.219 ms, Emission 305.508 ms, Total 880.667 ms
+                         Execution Time: 4080093.853 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..434051936.81 rows=1684 width=4) (actual time=1685.494..4074406.246 rows=3856 loops=1)
+                           ->  Seq Scan on part_102202 part  (cost=0.00..4142.49 rows=1263 width=4) (actual time=919.944..1038.058 rows=1406 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123593
+                           ->  Index Scan using partsupp_pkey_102234 on partsupp_102234 partsupp  (cost=0.42..343664.12 rows=1 width=8) (actual time=1051.765..2897.097 rows=3 loops=1406)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85913.25..85913.26 rows=1 width=32) (actual time=723.488..723.488 rows=1 loops=5624)
+                                         ->  Index Scan using lineitem_by_part_pkey_102074 on lineitem_by_part_102074 lineitem_by_part  (cost=0.43..85913.24 rows=1 width=5) (actual time=434.515..723.448 rows=1 loops=5624)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 7.676 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.702 ms, Inlining 142.348 ms, Optimization 460.212 ms, Emission 313.153 ms, Total 917.415 ms
+                         Execution Time: 4074432.853 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..434311609.15 rows=1671 width=4) (actual time=2438.057..4070687.627 rows=3798 loops=1)
+                           ->  Seq Scan on part_102178 part  (cost=0.00..4143.80 rows=1264 width=4) (actual time=905.689..1112.405 rows=1399 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123705
+                           ->  Index Scan using partsupp_pkey_102210 on partsupp_102210 partsupp  (cost=0.42..343597.67 rows=1 width=8) (actual time=1100.633..2908.884 rows=3 loops=1399)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85896.63..85896.65 rows=1 width=32) (actual time=726.372..726.373 rows=1 loops=5596)
+                                         ->  Index Scan using lineitem_by_part_pkey_102050 on lineitem_by_part_102050 lineitem_by_part  (cost=0.43..85896.63 rows=1 width=5) (actual time=435.791..726.344 rows=1 loops=5596)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 8.002 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.638 ms, Inlining 126.866 ms, Optimization 459.428 ms, Emission 313.053 ms, Total 900.984 ms
+                         Execution Time: 4070708.202 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..430024346.05 rows=1676 width=4) (actual time=1658.745..4069952.758 rows=3813 loops=1)
+                           ->  Seq Scan on part_102198 part  (cost=0.00..4135.56 rows=1257 width=4) (actual time=902.895..1104.224 rows=1404 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123041
+                           ->  Index Scan using partsupp_pkey_102230 on partsupp_102230 partsupp  (cost=0.42..342100.40 rows=1 width=8) (actual time=1075.968..2898.019 rows=3 loops=1404)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85522.32..85522.33 rows=1 width=32) (actual time=723.647..723.648 rows=1 loops=5616)
+                                         ->  Index Scan using lineitem_by_part_pkey_102070 on lineitem_by_part_102070 lineitem_by_part  (cost=0.43..85522.31 rows=1 width=5) (actual time=434.384..723.607 rows=1 loops=5616)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 10.353 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.662 ms, Inlining 128.870 ms, Optimization 454.262 ms, Emission 324.893 ms, Total 909.687 ms
+                         Execution Time: 4069965.508 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..431746315.95 rows=1675 width=4) (actual time=2392.869..4064769.457 rows=3733 loops=1)
+                           ->  Seq Scan on part_102200 part  (cost=0.00..4139.21 rows=1260 width=4) (actual time=918.974..1126.397 rows=1390 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123347
+                           ->  Index Scan using partsupp_pkey_102232 on partsupp_102232 partsupp  (cost=0.42..342652.51 rows=1 width=8) (actual time=1075.962..2923.455 rows=3 loops=1390)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85660.35..85660.36 rows=1 width=32) (actual time=730.035..730.035 rows=1 loops=5560)
+                                         ->  Index Scan using lineitem_by_part_pkey_102072 on lineitem_by_part_102072 lineitem_by_part  (cost=0.43..85660.34 rows=1 width=5) (actual time=441.072..730.003 rows=1 loops=5560)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.599 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 5.442 ms, Inlining 143.761 ms, Optimization 460.035 ms, Emission 310.550 ms, Total 919.788 ms
+                         Execution Time: 4064782.415 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..436575093.94 rows=1678 width=4) (actual time=1648.720..4043846.788 rows=3703 loops=1)
+                           ->  Seq Scan on part_102192 part  (cost=0.00..4147.93 rows=1267 width=4) (actual time=877.956..1047.474 rows=1362 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 124072
+                           ->  Index Scan using partsupp_pkey_102224 on partsupp_102224 partsupp  (cost=0.42..344570.59 rows=1 width=8) (actual time=1085.256..2968.261 rows=3 loops=1362)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86139.86..86139.88 rows=1 width=32) (actual time=741.178..741.178 rows=1 loops=5448)
+                                         ->  Index Scan using lineitem_by_part_pkey_102064 on lineitem_by_part_102064 lineitem_by_part  (cost=0.43..86139.86 rows=1 width=5) (actual time=444.731..741.147 rows=1 loops=5448)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 13.289 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.709 ms, Inlining 117.174 ms, Optimization 452.493 ms, Emission 305.692 ms, Total 877.068 ms
+                         Execution Time: 4043885.785 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..436853258.37 rows=1689 width=4) (actual time=1631.867..4039246.704 rows=3637 loops=1)
+                           ->  Seq Scan on part_102186 part  (cost=0.00..4148.20 rows=1267 width=4) (actual time=896.720..1081.606 rows=1356 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 124100
+                           ->  Index Scan using partsupp_pkey_102218 on partsupp_102218 partsupp  (cost=0.42..344790.13 rows=1 width=8) (actual time=1130.442..2977.953 rows=3 loops=1356)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86194.75..86194.76 rows=1 width=32) (actual time=743.594..743.594 rows=1 loops=5424)
+                                         ->  Index Scan using lineitem_by_part_pkey_102058 on lineitem_by_part_102058 lineitem_by_part  (cost=0.43..86194.74 rows=1 width=5) (actual time=445.763..743.554 rows=1 loops=5424)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 4.507 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.467 ms, Inlining 132.603 ms, Optimization 455.773 ms, Emission 307.918 ms, Total 897.761 ms
+                         Execution Time: 4039255.786 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432239331.61 rows=1676 width=4) (actual time=1529.710..4037098.099 rows=3730 loops=1)
+                           ->  Seq Scan on part_102184 part  (cost=0.00..4140.14 rows=1261 width=4) (actual time=788.106..950.069 rows=1364 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123447
+                           ->  Index Scan using partsupp_pkey_102216 on partsupp_102216 partsupp  (cost=0.42..342771.75 rows=1 width=8) (actual time=1073.405..2959.036 rows=3 loops=1364)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85690.15..85690.17 rows=1 width=32) (actual time=738.903..738.903 rows=1 loops=5456)
+                                         ->  Index Scan using lineitem_by_part_pkey_102056 on lineitem_by_part_102056 lineitem_by_part  (cost=0.43..85690.15 rows=1 width=5) (actual time=436.633..738.864 rows=1 loops=5456)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 7.456 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.627 ms, Inlining 63.539 ms, Optimization 405.794 ms, Emission 312.525 ms, Total 783.485 ms
+                         Execution Time: 4037128.370 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432228203.31 rows=1680 width=4) (actual time=2301.994..4034277.737 rows=3705 loops=1)
+                           ->  Seq Scan on part_102180 part  (cost=0.00..4139.45 rows=1260 width=4) (actual time=886.659..1051.616 rows=1358 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123398
+                           ->  Index Scan using partsupp_pkey_102212 on partsupp_102212 partsupp  (cost=0.42..343034.96 rows=1 width=8) (actual time=1105.424..2969.950 rows=3 loops=1358)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85755.96..85755.97 rows=1 width=32) (actual time=741.621..741.622 rows=1 loops=5432)
+                                         ->  Index Scan using lineitem_by_part_pkey_102052 on lineitem_by_part_102052 lineitem_by_part  (cost=0.43..85755.95 rows=1 width=5) (actual time=441.927..741.584 rows=1 loops=5432)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.825 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.615 ms, Inlining 118.180 ms, Optimization 448.989 ms, Emission 314.212 ms, Total 882.996 ms
+                         Execution Time: 4034300.956 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..435095177.59 rows=1685 width=4) (actual time=1653.976..4023592.380 rows=3622 loops=1)
+                           ->  Seq Scan on part_102190 part  (cost=0.00..4144.56 rows=1264 width=4) (actual time=913.918..1120.177 rows=1347 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123818
+                           ->  Index Scan using partsupp_pkey_102222 on partsupp_102222 partsupp  (cost=0.42..344217.58 rows=1 width=8) (actual time=1116.875..2986.214 rows=3 loops=1347)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86051.61..86051.62 rows=1 width=32) (actual time=745.756..745.756 rows=1 loops=5388)
+                                         ->  Index Scan using lineitem_by_part_pkey_102062 on lineitem_by_part_102062 lineitem_by_part  (cost=0.43..86051.61 rows=1 width=5) (actual time=449.471..745.725 rows=1 loops=5388)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 15.622 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.691 ms, Inlining 149.798 ms, Optimization 457.713 ms, Emission 306.154 ms, Total 915.356 ms
+                         Execution Time: 4023629.427 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..431731208.71 rows=1680 width=4) (actual time=1529.319..4021959.481 rows=3687 loops=1)
+                           ->  Seq Scan on part_102194 part  (cost=0.00..4138.68 rows=1260 width=4) (actual time=853.057..1056.420 rows=1353 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123341
+                           ->  Index Scan using partsupp_pkey_102226 on partsupp_102226 partsupp  (cost=0.42..342640.52 rows=1 width=8) (actual time=1098.178..2971.820 rows=3 loops=1353)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85657.35..85657.36 rows=1 width=32) (actual time=742.113..742.114 rows=1 loops=5412)
+                                         ->  Index Scan using lineitem_by_part_pkey_102066 on lineitem_by_part_102066 lineitem_by_part  (cost=0.43..85657.34 rows=1 width=5) (actual time=440.349..742.064 rows=1 loops=5412)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.591 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.617 ms, Inlining 110.474 ms, Optimization 418.463 ms, Emission 317.344 ms, Total 847.899 ms
+                         Execution Time: 4021970.219 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..433488424.50 rows=1652 width=4) (actual time=1442.715..4019843.282 rows=3662 loops=1)
+                           ->  Seq Scan on part_102172 part  (cost=0.00..4142.45 rows=1263 width=4) (actual time=793.843..1018.301 rows=1353 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123643
+                           ->  Index Scan using partsupp_pkey_102204 on partsupp_102204 partsupp  (cost=0.42..343217.95 rows=1 width=8) (actual time=1076.941..2970.280 rows=3 loops=1353)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85801.70..85801.72 rows=1 width=32) (actual time=741.686..741.687 rows=1 loops=5412)
+                                         ->  Index Scan using lineitem_by_part_pkey_102044 on lineitem_by_part_102044 lineitem_by_part  (cost=0.43..85801.70 rows=1 width=5) (actual time=441.623..741.655 rows=1 loops=5412)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.684 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.603 ms, Inlining 61.840 ms, Optimization 406.914 ms, Emission 319.821 ms, Total 790.179 ms
+                         Execution Time: 4019882.978 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..433236111.07 rows=1683 width=4) (actual time=1638.778..4015965.217 rows=3654 loops=1)
+                           ->  Seq Scan on part_102188 part  (cost=0.00..4141.86 rows=1262 width=4) (actual time=892.800..1046.114 rows=1352 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123597
+                           ->  Index Scan using partsupp_pkey_102220 on partsupp_102220 partsupp  (cost=0.42..343289.98 rows=1 width=8) (actual time=1112.096..2969.577 rows=3 loops=1352)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85819.71..85819.72 rows=1 width=32) (actual time=741.544..741.544 rows=1 loops=5408)
+                                         ->  Index Scan using lineitem_by_part_pkey_102060 on lineitem_by_part_102060 lineitem_by_part  (cost=0.43..85819.71 rows=1 width=5) (actual time=443.393..741.506 rows=1 loops=5408)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 4.338 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.487 ms, Inlining 130.877 ms, Optimization 449.505 ms, Emission 309.357 ms, Total 891.226 ms
+                         Execution Time: 4015988.751 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432223629.32 rows=1679 width=4) (actual time=1385.375..3999250.495 rows=3840 loops=1)
+                           ->  Seq Scan on part_102195 part  (cost=0.00..4139.55 rows=1260 width=4) (actual time=735.663..926.894 rows=1420 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123344
+                           ->  Index Scan using partsupp_pkey_102227 on partsupp_102227 partsupp  (cost=0.42..343031.33 rows=1 width=8) (actual time=1044.800..2815.706 rows=3 loops=1420)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85755.05..85755.06 rows=1 width=32) (actual time=703.106..703.107 rows=1 loops=5680)
+                                         ->  Index Scan using lineitem_by_part_pkey_102067 on lineitem_by_part_102067 lineitem_by_part  (cost=0.43..85755.04 rows=1 width=5) (actual time=419.923..703.071 rows=1 loops=5680)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 9.192 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.254 ms, Inlining 108.754 ms, Optimization 369.270 ms, Emission 252.008 ms, Total 731.286 ms
+                         Execution Time: 3999267.881 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..434915976.31 rows=1687 width=4) (actual time=5101.730..3995552.287 rows=3815 loops=1)
+                           ->  Seq Scan on part_102173 part  (cost=0.00..4145.26 rows=1265 width=4) (actual time=742.171..986.850 rows=1401 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123820
+                           ->  Index Scan using partsupp_pkey_102205 on partsupp_102205 partsupp  (cost=0.42..343803.81 rows=1 width=8) (actual time=1041.915..2851.198 rows=3 loops=1401)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85948.17..85948.18 rows=1 width=32) (actual time=711.956..711.956 rows=1 loops=5604)
+                                         ->  Index Scan using lineitem_by_part_pkey_102045 on lineitem_by_part_102045 lineitem_by_part  (cost=0.43..85948.16 rows=1 width=5) (actual time=423.810..711.921 rows=1 loops=5604)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.838 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 6.360 ms, Inlining 107.902 ms, Optimization 367.984 ms, Emission 263.924 ms, Total 746.169 ms
+                         Execution Time: 3995574.970 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432725769.99 rows=1683 width=4) (actual time=1422.253..3990386.560 rows=3788 loops=1)
+                           ->  Seq Scan on part_102191 part  (cost=0.00..4141.16 rows=1262 width=4) (actual time=747.922..994.317 rows=1389 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123504
+                           ->  Index Scan using partsupp_pkey_102223 on partsupp_102223 partsupp  (cost=0.42..342885.59 rows=1 width=8) (actual time=1061.688..2872.112 rows=3 loops=1389)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85718.61..85718.63 rows=1 width=32) (actual time=717.171..717.171 rows=1 loops=5556)
+                                         ->  Index Scan using lineitem_by_part_pkey_102063 on lineitem_by_part_102063 lineitem_by_part  (cost=0.43..85718.61 rows=1 width=5) (actual time=425.361..717.127 rows=1 loops=5556)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 6.595 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 2.736 ms, Inlining 104.707 ms, Optimization 374.924 ms, Emission 265.342 ms, Total 747.709 ms
+                         Execution Time: 3990406.402 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..439530756.79 rows=1695 width=4) (actual time=1320.297..3987701.872 rows=3708 loops=1)
+                           ->  Seq Scan on part_102183 part  (cost=0.00..4152.56 rows=1271 width=4) (actual time=668.222..880.894 rows=1376 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 124429
+                           ->  Index Scan using partsupp_pkey_102215 on partsupp_102215 partsupp  (cost=0.42..345811.64 rows=1 width=8) (actual time=1080.259..2897.366 rows=3 loops=1376)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86450.13..86450.14 rows=1 width=32) (actual time=723.496..723.497 rows=1 loops=5504)
+                                         ->  Index Scan using lineitem_by_part_pkey_102055 on lineitem_by_part_102055 lineitem_by_part  (cost=0.43..86450.12 rows=1 width=5) (actual time=433.614..723.461 rows=1 loops=5504)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 4.392 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.173 ms, Inlining 47.310 ms, Optimization 352.478 ms, Emission 264.176 ms, Total 665.136 ms
+                         Execution Time: 3987714.424 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..435318348.65 rows=1687 width=4) (actual time=1364.016..3976639.745 rows=3711 loops=1)
+                           ->  Seq Scan on part_102189 part  (cost=0.00..4145.82 rows=1265 width=4) (actual time=745.612..919.434 rows=1366 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123900
+                           ->  Index Scan using partsupp_pkey_102221 on partsupp_102221 partsupp  (cost=0.42..344121.89 rows=1 width=8) (actual time=1055.148..2910.468 rows=3 loops=1366)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86027.69..86027.70 rows=1 width=32) (actual time=726.745..726.747 rows=1 loops=5464)
+                                         ->  Index Scan using lineitem_by_part_pkey_102061 on lineitem_by_part_102061 lineitem_by_part  (cost=0.43..86027.68 rows=1 width=5) (actual time=433.700..726.700 rows=1 loops=5464)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 10.967 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 3.307 ms, Inlining 104.215 ms, Optimization 376.638 ms, Emission 262.022 ms, Total 746.183 ms
+                         Execution Time: 3976666.960 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..865840806.21 rows=3327 width=4) (actual time=1367.745..3976407.737 rows=3688 loops=1)
+                           ->  Seq Scan on part_102193 part  (cost=0.00..4140.27 rows=2522 width=4) (actual time=729.144..906.475 rows=1371 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123451
+                           ->  Index Scan using partsupp_pkey_102225 on partsupp_102225 partsupp  (cost=0.42..343313.50 rows=1 width=8) (actual time=1078.858..2899.661 rows=3 loops=1371)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85826.01..85826.02 rows=1 width=32) (actual time=724.014..724.014 rows=1 loops=5484)
+                                         ->  Index Scan using lineitem_by_part_pkey_102065 on lineitem_by_part_102065 lineitem_by_part  (cost=0.43..85826.00 rows=1 width=5) (actual time=435.007..723.985 rows=1 loops=5484)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 5.653 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.172 ms, Inlining 98.526 ms, Optimization 366.820 ms, Emission 259.045 ms, Total 725.563 ms
+                         Execution Time: 3976421.972 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432389050.56 rows=1681 width=4) (actual time=1576.496..3973542.776 rows=3591 loops=1)
+                           ->  Seq Scan on part_102182 part  (cost=0.00..4140.51 rows=1261 width=4) (actual time=878.396..1047.604 rows=1331 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123510
+                           ->  Index Scan using partsupp_pkey_102214 on partsupp_102214 partsupp  (cost=0.42..342890.48 rows=1 width=8) (actual time=1106.113..2984.551 rows=3 loops=1331)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85719.84..85719.85 rows=1 width=32) (actual time=745.267..745.268 rows=1 loops=5324)
+                                         ->  Index Scan using lineitem_by_part_pkey_102054 on lineitem_by_part_102054 lineitem_by_part  (cost=0.43..85719.83 rows=1 width=5) (actual time=444.578..745.224 rows=1 loops=5324)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 4.389 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.526 ms, Inlining 122.117 ms, Optimization 449.641 ms, Emission 302.684 ms, Total 875.967 ms
+                         Execution Time: 3973556.230 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..433206528.98 rows=1683 width=4) (actual time=1364.123..3971674.721 rows=3733 loops=1)
+                           ->  Seq Scan on part_102179 part  (cost=0.00..4141.59 rows=1262 width=4) (actual time=717.774..870.009 rows=1365 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123562
+                           ->  Index Scan using partsupp_pkey_102211 on partsupp_102211 partsupp  (cost=0.42..343266.54 rows=1 width=8) (actual time=1075.159..2908.987 rows=3 loops=1365)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85813.85..85813.86 rows=1 width=32) (actual time=726.394..726.394 rows=1 loops=5460)
+                                         ->  Index Scan using lineitem_by_part_pkey_102051 on lineitem_by_part_102051 lineitem_by_part  (cost=0.43..85813.85 rows=1 width=5) (actual time=430.958..726.361 rows=1 loops=5460)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 3.564 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.123 ms, Inlining 72.661 ms, Optimization 381.281 ms, Emission 260.591 ms, Total 715.655 ms
+                         Execution Time: 3971705.492 ms
+               ->  Task
+                     Tuple data received from node: 15 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..437552621.35 rows=1691 width=4) (actual time=2065.212..3966155.459 rows=3761 loops=1)
+                           ->  Seq Scan on part_102175 part  (cost=0.00..4148.88 rows=1268 width=4) (actual time=746.604..938.812 rows=1351 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 124159
+                           ->  Index Scan using partsupp_pkey_102207 on partsupp_102207 partsupp  (cost=0.42..345069.76 rows=1 width=8) (actual time=1037.196..2935.015 rows=3 loops=1351)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86264.66..86264.67 rows=1 width=32) (actual time=732.898..732.898 rows=1 loops=5404)
+                                         ->  Index Scan using lineitem_by_part_pkey_102047 on lineitem_by_part_102047 lineitem_by_part  (cost=0.43..86264.65 rows=1 width=5) (actual time=431.040..732.864 rows=1 loops=5404)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 18.747 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.293 ms, Inlining 116.893 ms, Optimization 372.742 ms, Emission 256.800 ms, Total 747.728 ms
+                         Execution Time: 3966169.073 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432883943.92 rows=1646 width=4) (actual time=1427.122..3946793.752 rows=3604 loops=1)
+                           ->  Seq Scan on part_102187 part  (cost=0.00..4140.75 rows=1261 width=4) (actual time=755.147..930.112 rows=1346 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123514
+                           ->  Index Scan using partsupp_pkey_102219 on partsupp_102219 partsupp  (cost=0.42..343282.94 rows=1 width=8) (actual time=1093.074..2931.514 rows=3 loops=1346)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85817.95..85817.97 rows=1 width=32) (actual time=732.021..732.021 rows=1 loops=5384)
+                                         ->  Index Scan using lineitem_by_part_pkey_102059 on lineitem_by_part_102059 lineitem_by_part  (cost=0.43..85817.95 rows=1 width=5) (actual time=441.696..731.980 rows=1 loops=5384)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 6.464 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.293 ms, Inlining 125.886 ms, Optimization 372.203 ms, Emission 249.566 ms, Total 748.948 ms
+                         Execution Time: 3946810.798 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432231123.62 rows=1681 width=4) (actual time=2362.918..3932902.671 rows=3573 loops=1)
+                           ->  Seq Scan on part_102176 part  (cost=0.00..4140.23 rows=1261 width=4) (actual time=917.568..1074.833 rows=1318 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123500
+                           ->  Index Scan using partsupp_pkey_102208 on partsupp_102208 partsupp  (cost=0.42..342765.24 rows=1 width=8) (actual time=1074.796..2983.116 rows=3 loops=1318)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85688.53..85688.54 rows=1 width=32) (actual time=744.891..744.892 rows=1 loops=5272)
+                                         ->  Index Scan using lineitem_by_part_pkey_102048 on lineitem_by_part_102048 lineitem_by_part  (cost=0.43..85688.52 rows=1 width=5) (actual time=448.578..744.851 rows=1 loops=5272)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 3.995 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.635 ms, Inlining 152.913 ms, Optimization 447.411 ms, Emission 311.440 ms, Total 913.399 ms
+                         Execution Time: 3932938.591 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..428957110.30 rows=1662 width=4) (actual time=1401.750..3932464.731 rows=3703 loops=1)
+                           ->  Seq Scan on part_102177 part  (cost=0.00..4134.41 rows=1256 width=4) (actual time=735.520..953.381 rows=1344 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123009
+                           ->  Index Scan using partsupp_pkey_102209 on partsupp_102209 partsupp  (cost=0.42..341523.06 rows=1 width=8) (actual time=1077.521..2925.200 rows=3 loops=1344)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85377.98..85377.99 rows=1 width=32) (actual time=730.399..730.400 rows=1 loops=5376)
+                                         ->  Index Scan using lineitem_by_part_pkey_102049 on lineitem_by_part_102049 lineitem_by_part  (cost=0.43..85377.98 rows=1 width=5) (actual time=432.539..730.362 rows=1 loops=5376)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 11.464 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.285 ms, Inlining 100.810 ms, Optimization 373.094 ms, Emission 256.436 ms, Total 731.625 ms
+                         Execution Time: 3932478.679 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..429380044.34 rows=1670 width=4) (actual time=1382.029..3922957.458 rows=3598 loops=1)
+                           ->  Seq Scan on part_102181 part  (cost=0.00..4134.79 rows=1256 width=4) (actual time=743.205..976.359 rows=1341 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123042
+                           ->  Index Scan using partsupp_pkey_102213 on partsupp_102213 partsupp  (cost=0.42..341859.79 rows=1 width=8) (actual time=1094.935..2924.634 rows=3 loops=1341)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85462.16..85462.18 rows=1 width=32) (actual time=730.324..730.324 rows=1 loops=5364)
+                                         ->  Index Scan using lineitem_by_part_pkey_102053 on lineitem_by_part_102053 lineitem_by_part  (cost=0.43..85462.16 rows=1 width=5) (actual time=434.192..730.288 rows=1 loops=5364)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 8.230 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.264 ms, Inlining 111.755 ms, Optimization 372.272 ms, Emission 256.544 ms, Total 741.836 ms
+                         Execution Time: 3922965.726 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..434025629.87 rows=1667 width=4) (actual time=1954.740..3917271.899 rows=3601 loops=1)
+                           ->  Seq Scan on part_102171 part  (cost=0.00..4142.60 rows=1263 width=4) (actual time=666.997..843.933 rows=1329 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123679
+                           ->  Index Scan using partsupp_pkey_102203 on partsupp_102203 partsupp  (cost=0.42..343643.29 rows=1 width=8) (actual time=1096.707..2946.876 rows=3 loops=1329)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85908.04..85908.05 rows=1 width=32) (actual time=735.793..735.793 rows=1 loops=5316)
+                                         ->  Index Scan using lineitem_by_part_pkey_102043 on lineitem_by_part_102043 lineitem_by_part  (cost=0.43..85908.03 rows=1 width=5) (actual time=439.460..735.748 rows=1 loops=5316)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 7.301 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.221 ms, Inlining 48.916 ms, Optimization 355.592 ms, Emission 262.139 ms, Total 667.867 ms
+                         Execution Time: 3917298.540 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..433515581.69 rows=1683 width=4) (actual time=1446.873..3916227.999 rows=3653 loops=1)
+                           ->  Seq Scan on part_102197 part  (cost=0.00..4142.21 rows=1262 width=4) (actual time=760.577..915.290 rows=1328 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123649
+                           ->  Index Scan using partsupp_pkey_102229 on partsupp_102229 partsupp  (cost=0.42..343511.43 rows=1 width=8) (actual time=1083.883..2948.252 rows=3 loops=1328)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85875.07..85875.09 rows=1 width=32) (actual time=736.179..736.179 rows=1 loops=5312)
+                                         ->  Index Scan using lineitem_by_part_pkey_102069 on lineitem_by_part_102069 lineitem_by_part  (cost=0.43..85875.07 rows=1 width=5) (actual time=436.575..736.138 rows=1 loops=5312)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 8.850 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.300 ms, Inlining 126.094 ms, Optimization 375.697 ms, Emission 249.458 ms, Total 752.548 ms
+                         Execution Time: 3916236.157 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..435504530.11 rows=1687 width=4) (actual time=1357.747..3895888.730 rows=3522 loops=1)
+                           ->  Seq Scan on part_102199 part  (cost=0.00..4144.82 rows=1265 width=4) (actual time=713.425..962.358 rows=1319 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123867
+                           ->  Index Scan using partsupp_pkey_102231 on partsupp_102231 partsupp  (cost=0.42..344269.07 rows=1 width=8) (actual time=1110.874..2952.925 rows=3 loops=1319)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86064.49..86064.50 rows=1 width=32) (actual time=737.339..737.339 rows=1 loops=5276)
+                                         ->  Index Scan using lineitem_by_part_pkey_102071 on lineitem_by_part_102071 lineitem_by_part  (cost=0.43..86064.48 rows=1 width=5) (actual time=446.553..737.307 rows=1 loops=5276)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 4.775 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.243 ms, Inlining 78.049 ms, Optimization 368.270 ms, Emission 264.920 ms, Total 712.482 ms
+                         Execution Time: 3895917.706 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..434852199.26 rows=1685 width=4) (actual time=1711.746..3892148.721 rows=3519 loops=1)
+                           ->  Seq Scan on part_102174 part  (cost=0.00..4144.35 rows=1264 width=4) (actual time=917.506..1102.452 rows=1297 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123851
+                           ->  Index Scan using partsupp_pkey_102206 on partsupp_102206 partsupp  (cost=0.42..344025.35 rows=1 width=8) (actual time=1101.895..3000.000 rows=3 loops=1297)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=86003.56..86003.57 rows=1 width=32) (actual time=749.097..749.097 rows=1 loops=5188)
+                                         ->  Index Scan using lineitem_by_part_pkey_102046 on lineitem_by_part_102046 lineitem_by_part  (cost=0.43..86003.55 rows=1 width=5) (actual time=449.174..749.069 rows=1 loops=5188)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 6.780 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.642 ms, Inlining 147.208 ms, Optimization 451.910 ms, Emission 311.225 ms, Total 911.986 ms
+                         Execution Time: 3892176.321 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..434691820.54 rows=1666 width=4) (actual time=1393.531..3863710.394 rows=3568 loops=1)
+                           ->  Seq Scan on part_102201 part  (cost=0.00..4144.40 rows=1264 width=4) (actual time=759.054..961.059 rows=1308 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123844
+                           ->  Index Scan using partsupp_pkey_102233 on partsupp_102233 partsupp  (cost=0.42..343898.47 rows=1 width=8) (actual time=1084.774..2953.147 rows=3 loops=1308)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85971.83..85971.85 rows=1 width=32) (actual time=737.347..737.348 rows=1 loops=5232)
+                                         ->  Index Scan using lineitem_by_part_pkey_102073 on lineitem_by_part_102073 lineitem_by_part  (cost=0.43..85971.83 rows=1 width=5) (actual time=438.748..737.302 rows=1 loops=5232)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 7.254 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.299 ms, Inlining 130.342 ms, Optimization 369.542 ms, Emission 250.705 ms, Total 751.888 ms
+                         Execution Time: 3863721.833 ms
+               ->  Task
+                     Tuple data received from node: 14 kB
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=0.42..432735511.14 rows=1681 width=4) (actual time=2133.364..3841005.899 rows=3559 loops=1)
+                           ->  Seq Scan on part_102185 part  (cost=0.00..4140.95 rows=1261 width=4) (actual time=743.170..936.731 rows=1303 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Rows Removed by Filter: 123573
+                           ->  Index Scan using partsupp_pkey_102217 on partsupp_102217 partsupp  (cost=0.42..343165.23 rows=1 width=8) (actual time=1096.691..2947.077 rows=3 loops=1303)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=85788.53..85788.54 rows=1 width=32) (actual time=735.861..735.862 rows=1 loops=5212)
+                                         ->  Index Scan using lineitem_by_part_pkey_102057 on lineitem_by_part_102057 lineitem_by_part  (cost=0.43..85788.52 rows=1 width=5) (actual time=437.990..735.817 rows=1 loops=5212)
+                                               Index Cond: (l_partkey = partsupp.ps_partkey)
+                                               Filter: ((l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date) AND (l_suppkey = partsupp.ps_suppkey))
+                                               Rows Removed by Filter: 29
+                         Planning Time: 4.454 ms
+                         JIT:
+                           Functions: 21
+                           Options: Inlining true, Optimization true, Expressions true, Deforming true
+                           Timing: Generation 1.410 ms, Inlining 120.664 ms, Optimization 375.254 ms, Emission 242.605 ms, Total 739.933 ms
+                         Execution Time: 3841029.971 ms
+         Planning Time: 0.000 ms
+         Execution Time: 4080144.407 ms
+   Task Count: 1
+   Tuple data received from nodes: 173 kB
+   Tasks Shown: All
+   ->  Task
+         Tuple data received from node: 173 kB
+         Node: host=192.168.1.19 port=5432 dbname=tpch
+         ->  Sort  (cost=1993.40..1993.50 rows=40 width=51) (actual time=489.937..490.084 rows=3543 loops=1)
+               Sort Key: supplier.s_name
+               Sort Method: quicksort  Memory: 372kB
+               ->  Hash Join  (cost=443.45..1992.33 rows=40 width=51) (actual time=60.604..476.572 rows=3543 loops=1)
+                     Hash Cond: (supplier.s_nationkey = nation.n_nationkey)
+                     ->  Nested Loop  (cost=442.12..1987.94 rows=1000 width=55) (actual time=52.349..469.131 rows=89425 loops=1)
+                           ->  HashAggregate  (cost=441.70..443.70 rows=200 width=4) (actual time=51.301..69.841 rows=89425 loops=1)
+                                 Group Key: intermediate_result.ps_suppkey
+                                 Batches: 1  Memory Usage: 6689kB
+                                 ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..439.20 rows=118043 width=4) (actual time=16.115..25.925 rows=118043 loops=1)
+                           ->  Index Scan using supplier_pkey_102010 on supplier_102010 supplier  (cost=0.42..7.76 rows=1 width=59) (actual time=0.004..0.004 rows=1 loops=89425)
+                                 Index Cond: (s_suppkey = intermediate_result.ps_suppkey)
+                     ->  Hash  (cost=1.31..1.31 rows=1 width=4) (actual time=0.012..0.013 rows=1 loops=1)
+                           Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                           ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.008..0.010 rows=1 loops=1)
+                                 Filter: (n_name = 'CANADA'::bpchar)
+                                 Rows Removed by Filter: 24
+             Planning Time: 7.662 ms
+             Execution Time: 490.950 ms
+ Planning Time: 6.936 ms
+ Execution Time: 4107392.406 ms
+(774 rows)
+

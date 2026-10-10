@@ -1,0 +1,718 @@
+SET
+                                                                                                    QUERY PLAN                                                                                                    
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=0 width=0) (actual time=48.480..48.502 rows=367 loops=1)
+   ->  Distributed Subplan 1_1
+         Subplan Duration: 474.52 ms
+         Intermediate Data Size: 115 kB
+         Result destination: Send to 3 nodes
+         ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=4) (actual time=105.681..106.357 rows=11747 loops=1)
+               Task Count: 32
+               Tuple data received from nodes: 46 kB
+               Tasks Shown: All
+               ->  Task
+                     Tuple data received from node: 1616 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.83..4872.05 rows=165 width=4) (actual time=0.356..45.128 rows=404 loops=1)
+                           ->  Bitmap Heap Scan on part_102180 part  (cost=5.54..217.27 rows=124 width=4) (actual time=0.190..4.009 rows=147 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=117
+                                 ->  Bitmap Index Scan on q20i3_102180  (cost=0.00..5.50 rows=122 width=0) (actual time=0.111..0.112 rows=147 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102212 on partsupp_102212 partsupp  (cost=0.29..37.53 rows=1 width=8) (actual time=0.079..0.276 rows=3 loops=147)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.037..0.038 rows=1 loops=588)
+                                         ->  Index Only Scan using q20i1_102052 on lineitem_by_part_102052 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.021..0.022 rows=1 loops=588)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 9.205 ms
+                         Execution Time: 54.707 ms
+               ->  Task
+                     Tuple data received from node: 1312 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4934.48 rows=168 width=4) (actual time=10.341..53.010 rows=328 loops=1)
+                           ->  Bitmap Heap Scan on part_102188 part  (cost=5.56..219.97 rows=126 width=4) (actual time=10.195..10.861 rows=127 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=100
+                                 ->  Bitmap Index Scan on q20i3_102188  (cost=0.00..5.53 rows=124 width=0) (actual time=0.089..0.090 rows=127 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102220 on partsupp_102220 partsupp  (cost=0.29..37.41 rows=1 width=8) (actual time=0.040..0.281 rows=3 loops=127)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.052..0.052 rows=1 loops=508)
+                                         ->  Index Only Scan using q20i1_102060 on lineitem_by_part_102060 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.028..0.029 rows=1 loops=508)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 2.152 ms
+                         Execution Time: 53.485 ms
+               ->  Task
+                     Tuple data received from node: 1512 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..5001.42 rows=171 width=4) (actual time=0.400..51.865 rows=378 loops=1)
+                           ->  Bitmap Heap Scan on part_102174 part  (cost=5.57..221.92 rows=128 width=4) (actual time=0.221..0.975 rows=145 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=111
+                                 ->  Bitmap Index Scan on q20i3_102174  (cost=0.00..5.54 rows=125 width=0) (actual time=0.135..0.136 rows=145 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102206 on partsupp_102206 partsupp  (cost=0.29..37.33 rows=1 width=8) (actual time=0.130..0.348 rows=3 loops=145)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.064..0.064 rows=1 loops=580)
+                                         ->  Index Only Scan using q20i1_102046 on lineitem_by_part_102046 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.026..0.058 rows=1 loops=580)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 11.021 ms
+                         Execution Time: 52.432 ms
+               ->  Task
+                     Tuple data received from node: 1748 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4967.35 rows=169 width=4) (actual time=0.324..45.165 rows=437 loops=1)
+                           ->  Bitmap Heap Scan on part_102202 part  (cost=5.56..220.33 rows=127 width=4) (actual time=0.184..0.956 rows=156 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=115
+                                 ->  Bitmap Index Scan on q20i3_102202  (cost=0.00..5.53 rows=124 width=0) (actual time=0.113..0.114 rows=156 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102234 on partsupp_102234 partsupp  (cost=0.29..37.37 rows=1 width=8) (actual time=0.154..0.241 rows=3 loops=156)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.054..0.054 rows=1 loops=624)
+                                         ->  Index Only Scan using q20i1_102074 on lineitem_by_part_102074 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.034..0.035 rows=1 loops=624)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 11.252 ms
+                         Execution Time: 51.784 ms
+               ->  Task
+                     Tuple data received from node: 1484 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..4963.17 rows=169 width=4) (actual time=0.344..44.393 rows=371 loops=1)
+                           ->  Bitmap Heap Scan on part_102182 part  (cost=5.57..221.92 rows=127 width=4) (actual time=0.200..0.952 rows=139 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=114
+                                 ->  Bitmap Index Scan on q20i3_102182  (cost=0.00..5.54 rows=125 width=0) (actual time=0.133..0.134 rows=139 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102214 on partsupp_102214 partsupp  (cost=0.29..37.32 rows=1 width=8) (actual time=0.105..0.244 rows=3 loops=139)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.022..0.022 rows=1 loops=556)
+                                         ->  Index Only Scan using q20i1_102054 on lineitem_by_part_102054 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.011..0.011 rows=1 loops=556)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 8.212 ms
+                         Execution Time: 50.961 ms
+               ->  Task
+                     Tuple data received from node: 1388 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..4970.31 rows=169 width=4) (actual time=0.395..46.241 rows=347 loops=1)
+                           ->  Bitmap Heap Scan on part_102176 part  (cost=5.57..221.55 rows=127 width=4) (actual time=0.195..0.866 rows=124 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=97
+                                 ->  Bitmap Index Scan on q20i3_102176  (cost=0.00..5.54 rows=125 width=0) (actual time=0.119..0.120 rows=124 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102208 on partsupp_102208 partsupp  (cost=0.29..37.38 rows=1 width=8) (actual time=0.113..0.362 rows=3 loops=124)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.084..0.084 rows=1 loops=496)
+                                         ->  Index Only Scan using q20i1_102048 on lineitem_by_part_102048 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.053..0.054 rows=1 loops=496)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 11.056 ms
+                         Execution Time: 46.793 ms
+               ->  Task
+                     Tuple data received from node: 1444 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..5001.43 rows=171 width=4) (actual time=0.302..46.035 rows=361 loops=1)
+                           ->  Bitmap Heap Scan on part_102186 part  (cost=5.57..221.92 rows=128 width=4) (actual time=0.179..0.887 rows=135 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=107
+                                 ->  Bitmap Index Scan on q20i3_102186  (cost=0.00..5.54 rows=125 width=0) (actual time=0.091..0.092 rows=135 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102218 on partsupp_102218 partsupp  (cost=0.29..37.33 rows=1 width=8) (actual time=0.107..0.331 rows=3 loops=135)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.072..0.073 rows=1 loops=540)
+                                         ->  Index Only Scan using q20i1_102058 on lineitem_by_part_102058 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.055..0.067 rows=1 loops=540)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 11.201 ms
+                         Execution Time: 46.515 ms
+               ->  Task
+                     Tuple data received from node: 1568 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4936.23 rows=168 width=4) (actual time=0.357..42.015 rows=392 loops=1)
+                           ->  Bitmap Heap Scan on part_102172 part  (cost=5.56..219.97 rows=126 width=4) (actual time=0.206..0.956 rows=147 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=115
+                                 ->  Bitmap Index Scan on q20i3_102172  (cost=0.00..5.53 rows=124 width=0) (actual time=0.134..0.135 rows=147 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102204 on partsupp_102204 partsupp  (cost=0.29..37.42 rows=1 width=8) (actual time=0.149..0.276 rows=3 loops=147)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.039..0.039 rows=1 loops=588)
+                                         ->  Index Only Scan using q20i1_102044 on lineitem_by_part_102044 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.021..0.034 rows=1 loops=588)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 5.301 ms
+                         Execution Time: 42.579 ms
+               ->  Task
+                     Tuple data received from node: 1528 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.84..4904.74 rows=167 width=4) (actual time=0.310..31.725 rows=382 loops=1)
+                           ->  Bitmap Heap Scan on part_102198 part  (cost=5.55..219.22 rows=125 width=4) (actual time=0.171..10.033 rows=146 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=115
+                                 ->  Bitmap Index Scan on q20i3_102198  (cost=0.00..5.52 rows=123 width=0) (actual time=0.100..0.101 rows=146 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102230 on partsupp_102230 partsupp  (cost=0.29..37.47 rows=1 width=8) (actual time=0.095..0.145 rows=3 loops=146)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.030..0.030 rows=1 loops=584)
+                                         ->  Index Only Scan using q20i1_102070 on lineitem_by_part_102070 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.024..0.025 rows=1 loops=584)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 14.017 ms
+                         Execution Time: 41.296 ms
+               ->  Task
+                     Tuple data received from node: 1492 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4970.49 rows=169 width=4) (actual time=0.263..39.847 rows=373 loops=1)
+                           ->  Bitmap Heap Scan on part_102171 part  (cost=5.56..219.97 rows=127 width=4) (actual time=0.159..0.810 rows=139 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=106
+                                 ->  Bitmap Index Scan on q20i3_102171  (cost=0.00..5.53 rows=124 width=0) (actual time=0.089..0.090 rows=139 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102203 on partsupp_102203 partsupp  (cost=0.29..37.40 rows=1 width=8) (actual time=0.079..0.213 rows=3 loops=139)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.048..0.048 rows=1 loops=556)
+                                         ->  Index Only Scan using q20i1_102043 on lineitem_by_part_102043 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.031..0.032 rows=1 loops=556)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 4.663 ms
+                         Execution Time: 40.250 ms
+               ->  Task
+                     Tuple data received from node: 1372 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..4970.33 rows=169 width=4) (actual time=0.347..38.786 rows=343 loops=1)
+                           ->  Bitmap Heap Scan on part_102175 part  (cost=5.57..221.55 rows=127 width=4) (actual time=0.181..0.770 rows=127 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=95
+                                 ->  Bitmap Index Scan on q20i3_102175  (cost=0.00..5.54 rows=125 width=0) (actual time=0.120..0.121 rows=127 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102207 on partsupp_102207 partsupp  (cost=0.29..37.38 rows=1 width=8) (actual time=0.249..0.296 rows=3 loops=127)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.050..0.051 rows=1 loops=508)
+                                         ->  Index Only Scan using q20i1_102047 on lineitem_by_part_102047 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.045..0.046 rows=1 loops=508)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 4.710 ms
+                         Execution Time: 39.229 ms
+               ->  Task
+                     Tuple data received from node: 1360 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.84..4904.73 rows=167 width=4) (actual time=0.276..37.199 rows=340 loops=1)
+                           ->  Bitmap Heap Scan on part_102183 part  (cost=5.55..219.22 rows=125 width=4) (actual time=0.158..0.752 rows=124 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=94
+                                 ->  Bitmap Index Scan on q20i3_102183  (cost=0.00..5.52 rows=123 width=0) (actual time=0.105..0.106 rows=124 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102215 on partsupp_102215 partsupp  (cost=0.29..37.47 rows=1 width=8) (actual time=0.083..0.218 rows=3 loops=124)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.049..0.049 rows=1 loops=496)
+                                         ->  Index Only Scan using q20i1_102055 on lineitem_by_part_102055 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.013..0.014 rows=1 loops=496)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 6.922 ms
+                         Execution Time: 37.599 ms
+               ->  Task
+                     Tuple data received from node: 1596 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.84..4937.61 rows=168 width=4) (actual time=6.394..35.921 rows=399 loops=1)
+                           ->  Bitmap Heap Scan on part_102173 part  (cost=5.55..219.58 rows=126 width=4) (actual time=6.234..6.923 rows=148 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=114
+                                 ->  Bitmap Index Scan on q20i3_102173  (cost=0.00..5.52 rows=123 width=0) (actual time=0.127..0.128 rows=148 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102205 on partsupp_102205 partsupp  (cost=0.29..37.43 rows=1 width=8) (actual time=0.076..0.193 rows=3 loops=148)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.036..0.036 rows=1 loops=592)
+                                         ->  Index Only Scan using q20i1_102045 on lineitem_by_part_102045 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.030..0.031 rows=1 loops=592)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.826 ms
+                         Execution Time: 36.439 ms
+               ->  Task
+                     Tuple data received from node: 1524 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4934.13 rows=168 width=4) (actual time=0.273..35.889 rows=381 loops=1)
+                           ->  Bitmap Heap Scan on part_102189 part  (cost=5.56..219.61 rows=126 width=4) (actual time=0.169..5.848 rows=139 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=104
+                                 ->  Bitmap Index Scan on q20i3_102189  (cost=0.00..5.53 rows=124 width=0) (actual time=0.113..0.114 rows=139 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102221 on partsupp_102221 partsupp  (cost=0.29..37.41 rows=1 width=8) (actual time=0.101..0.213 rows=3 loops=139)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.048..0.048 rows=1 loops=556)
+                                         ->  Index Only Scan using q20i1_102061 on lineitem_by_part_102061 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.010..0.010 rows=1 loops=556)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 7.885 ms
+                         Execution Time: 36.320 ms
+               ->  Task
+                     Tuple data received from node: 1248 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4940.23 rows=168 width=4) (actual time=0.307..35.540 rows=312 loops=1)
+                           ->  Bitmap Heap Scan on part_102190 part  (cost=5.56..219.97 rows=126 width=4) (actual time=0.148..0.804 rows=115 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=92
+                                 ->  Bitmap Index Scan on q20i3_102190  (cost=0.00..5.53 rows=124 width=0) (actual time=0.084..0.085 rows=115 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102222 on partsupp_102222 partsupp  (cost=0.29..37.45 rows=1 width=8) (actual time=0.164..0.299 rows=3 loops=115)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.057..0.057 rows=1 loops=460)
+                                         ->  Index Only Scan using q20i1_102062 on lineitem_by_part_102062 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.011..0.012 rows=1 loops=460)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 5.273 ms
+                         Execution Time: 36.019 ms
+               ->  Task
+                     Tuple data received from node: 1648 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..4999.67 rows=171 width=4) (actual time=0.294..34.966 rows=412 loops=1)
+                           ->  Bitmap Heap Scan on part_102193 part  (cost=5.57..221.92 rows=128 width=4) (actual time=0.180..1.010 rows=146 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=114
+                                 ->  Bitmap Index Scan on q20i3_102193  (cost=0.00..5.54 rows=125 width=0) (actual time=0.119..0.120 rows=146 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102225 on partsupp_102225 partsupp  (cost=0.29..37.32 rows=1 width=8) (actual time=0.120..0.230 rows=3 loops=146)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.052..0.052 rows=1 loops=584)
+                                         ->  Index Only Scan using q20i1_102065 on lineitem_by_part_102065 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.029..0.030 rows=1 loops=584)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 8.112 ms
+                         Execution Time: 35.470 ms
+               ->  Task
+                     Tuple data received from node: 1376 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4967.34 rows=169 width=4) (actual time=0.315..34.550 rows=344 loops=1)
+                           ->  Bitmap Heap Scan on part_102187 part  (cost=5.56..220.33 rows=127 width=4) (actual time=0.184..5.253 rows=129 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=108
+                                 ->  Bitmap Index Scan on q20i3_102187  (cost=0.00..5.53 rows=124 width=0) (actual time=0.123..0.123 rows=129 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102219 on partsupp_102219 partsupp  (cost=0.29..37.37 rows=1 width=8) (actual time=0.084..0.224 rows=3 loops=129)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.015..0.015 rows=1 loops=516)
+                                         ->  Index Only Scan using q20i1_102059 on lineitem_by_part_102059 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.010..0.010 rows=1 loops=516)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 7.940 ms
+                         Execution Time: 34.963 ms
+               ->  Task
+                     Tuple data received from node: 1612 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=11.11..9565.28 rows=336 width=4) (actual time=3.344..34.292 rows=403 loops=1)
+                           ->  Bitmap Heap Scan on part_102192 part  (cost=10.82..277.26 rows=252 width=4) (actual time=0.177..0.981 rows=148 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=113
+                                 ->  Bitmap Index Scan on q20i3_102192  (cost=0.00..10.76 rows=247 width=0) (actual time=0.107..0.108 rows=148 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102224 on partsupp_102224 partsupp  (cost=0.29..36.85 rows=1 width=8) (actual time=0.121..0.222 rows=3 loops=148)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.026..0.026 rows=1 loops=592)
+                                         ->  Index Only Scan using q20i1_102064 on lineitem_by_part_102064 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.011..0.012 rows=1 loops=592)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 2.164 ms
+                         Execution Time: 34.860 ms
+               ->  Task
+                     Tuple data received from node: 1316 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4934.49 rows=168 width=4) (actual time=0.309..32.916 rows=329 loops=1)
+                           ->  Bitmap Heap Scan on part_102201 part  (cost=5.56..219.97 rows=126 width=4) (actual time=0.173..0.747 rows=119 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=94
+                                 ->  Bitmap Index Scan on q20i3_102201  (cost=0.00..5.53 rows=124 width=0) (actual time=0.120..0.121 rows=119 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102233 on partsupp_102233 partsupp  (cost=0.29..37.41 rows=1 width=8) (actual time=0.038..0.238 rows=3 loops=119)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.054..0.054 rows=1 loops=476)
+                                         ->  Index Only Scan using q20i1_102073 on lineitem_by_part_102073 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.048..0.049 rows=1 loops=476)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 14.906 ms
+                         Execution Time: 33.322 ms
+               ->  Task
+                     Tuple data received from node: 1380 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.83..4876.05 rows=165 width=4) (actual time=3.333..32.838 rows=345 loops=1)
+                           ->  Bitmap Heap Scan on part_102185 part  (cost=5.54..217.27 rows=124 width=4) (actual time=0.172..0.808 rows=128 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=104
+                                 ->  Bitmap Index Scan on q20i3_102185  (cost=0.00..5.50 rows=122 width=0) (actual time=0.111..0.111 rows=128 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102217 on partsupp_102217 partsupp  (cost=0.29..37.56 rows=1 width=8) (actual time=0.154..0.247 rows=3 loops=128)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.056..0.056 rows=1 loops=512)
+                                         ->  Index Only Scan using q20i1_102057 on lineitem_by_part_102057 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.027..0.040 rows=1 loops=512)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.938 ms
+                         Execution Time: 33.263 ms
+               ->  Task
+                     Tuple data received from node: 1416 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.86..4967.17 rows=169 width=4) (actual time=0.312..28.601 rows=354 loops=1)
+                           ->  Bitmap Heap Scan on part_102181 part  (cost=5.57..221.92 rows=127 width=4) (actual time=0.204..0.845 rows=133 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=108
+                                 ->  Bitmap Index Scan on q20i3_102181  (cost=0.00..5.54 rows=125 width=0) (actual time=0.146..0.146 rows=133 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102213 on partsupp_102213 partsupp  (cost=0.29..37.35 rows=1 width=8) (actual time=0.037..0.206 rows=3 loops=133)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.045..0.045 rows=1 loops=532)
+                                         ->  Index Only Scan using q20i1_102053 on lineitem_by_part_102053 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.027..0.027 rows=1 loops=532)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 7.907 ms
+                         Execution Time: 30.482 ms
+               ->  Task
+                     Tuple data received from node: 1512 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=11.13..9624.78 rows=339 width=4) (actual time=0.324..25.969 rows=378 loops=1)
+                           ->  Bitmap Heap Scan on part_102199 part  (cost=10.84..279.25 rows=254 width=4) (actual time=0.180..0.846 rows=141 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=108
+                                 ->  Bitmap Index Scan on q20i3_102199  (cost=0.00..10.78 rows=249 width=0) (actual time=0.116..0.117 rows=141 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102231 on partsupp_102231 partsupp  (cost=0.29..36.78 rows=1 width=8) (actual time=0.100..0.175 rows=3 loops=141)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.033..0.033 rows=1 loops=564)
+                                         ->  Index Only Scan using q20i1_102071 on lineitem_by_part_102071 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.015..0.021 rows=1 loops=564)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 4.852 ms
+                         Execution Time: 26.449 ms
+               ->  Task
+                     Tuple data received from node: 1448 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4968.74 rows=169 width=4) (actual time=0.320..25.837 rows=362 loops=1)
+                           ->  Bitmap Heap Scan on part_102178 part  (cost=5.56..219.97 rows=127 width=4) (actual time=0.167..0.887 rows=130 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=107
+                                 ->  Bitmap Index Scan on q20i3_102178  (cost=0.00..5.53 rows=124 width=0) (actual time=0.096..0.097 rows=130 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102210 on partsupp_102210 partsupp  (cost=0.29..37.38 rows=1 width=8) (actual time=0.064..0.188 rows=3 loops=130)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.035..0.035 rows=1 loops=520)
+                                         ->  Index Only Scan using q20i1_102050 on lineitem_by_part_102050 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.022..0.029 rows=1 loops=520)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 2.692 ms
+                         Execution Time: 26.413 ms
+               ->  Task
+                     Tuple data received from node: 1608 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4968.73 rows=169 width=4) (actual time=0.331..24.890 rows=402 loops=1)
+                           ->  Bitmap Heap Scan on part_102179 part  (cost=5.56..219.97 rows=127 width=4) (actual time=0.196..0.858 rows=145 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=107
+                                 ->  Bitmap Index Scan on q20i3_102179  (cost=0.00..5.53 rows=124 width=0) (actual time=0.135..0.136 rows=145 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102211 on partsupp_102211 partsupp  (cost=0.29..37.38 rows=1 width=8) (actual time=0.087..0.163 rows=3 loops=145)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.023..0.023 rows=1 loops=580)
+                                         ->  Index Only Scan using q20i1_102051 on lineitem_by_part_102051 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.010..0.016 rows=1 loops=580)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 5.181 ms
+                         Execution Time: 25.486 ms
+               ->  Task
+                     Tuple data received from node: 1364 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.87..5006.39 rows=171 width=4) (actual time=0.305..24.026 rows=341 loops=1)
+                           ->  Bitmap Heap Scan on part_102196 part  (cost=5.58..230.39 rows=128 width=4) (actual time=0.177..4.765 rows=132 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=104
+                                 ->  Bitmap Index Scan on q20i3_102196  (cost=0.00..5.54 rows=126 width=0) (actual time=0.116..0.117 rows=132 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102228 on partsupp_102228 partsupp  (cost=0.29..37.30 rows=1 width=8) (actual time=0.046..0.120 rows=3 loops=132)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.023..0.024 rows=1 loops=528)
+                                         ->  Index Only Scan using q20i1_102068 on lineitem_by_part_102068 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.012..0.013 rows=1 loops=528)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 5.204 ms
+                         Execution Time: 24.481 ms
+               ->  Task
+                     Tuple data received from node: 1460 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4969.10 rows=169 width=4) (actual time=0.524..14.342 rows=365 loops=1)
+                           ->  Bitmap Heap Scan on part_102184 part  (cost=5.56..220.33 rows=127 width=4) (actual time=0.453..1.208 rows=132 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=101
+                                 ->  Bitmap Index Scan on q20i3_102184  (cost=0.00..5.53 rows=124 width=0) (actual time=0.386..0.387 rows=132 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102216 on partsupp_102216 partsupp  (cost=0.29..37.38 rows=1 width=8) (actual time=0.041..0.096 rows=3 loops=132)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.017..0.017 rows=1 loops=528)
+                                         ->  Index Only Scan using q20i1_102056 on lineitem_by_part_102056 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.011..0.012 rows=1 loops=528)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.951 ms
+                         Execution Time: 14.804 ms
+               ->  Task
+                     Tuple data received from node: 1620 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.81..4810.31 rows=163 width=4) (actual time=0.167..12.571 rows=405 loops=1)
+                           ->  Bitmap Heap Scan on part_102195 part  (cost=5.52..213.02 rows=122 width=4) (actual time=0.112..0.750 rows=146 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=112
+                                 ->  Bitmap Index Scan on q20i3_102195  (cost=0.00..5.49 rows=120 width=0) (actual time=0.059..0.060 rows=146 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102227 on partsupp_102227 partsupp  (cost=0.29..37.67 rows=1 width=8) (actual time=0.033..0.078 rows=3 loops=146)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.014..0.014 rows=1 loops=584)
+                                         ->  Index Only Scan using q20i1_102067 on lineitem_by_part_102067 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.009..0.010 rows=1 loops=584)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.136 ms
+                         Execution Time: 12.922 ms
+               ->  Task
+                     Tuple data received from node: 1368 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.83..4872.06 rows=165 width=4) (actual time=0.212..10.885 rows=342 loops=1)
+                           ->  Bitmap Heap Scan on part_102177 part  (cost=5.54..217.27 rows=124 width=4) (actual time=0.143..0.706 rows=134 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=110
+                                 ->  Bitmap Index Scan on q20i3_102177  (cost=0.00..5.50 rows=122 width=0) (actual time=0.081..0.082 rows=134 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102209 on partsupp_102209 partsupp  (cost=0.29..37.53 rows=1 width=8) (actual time=0.033..0.073 rows=3 loops=134)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.013..0.013 rows=1 loops=536)
+                                         ->  Index Only Scan using q20i1_102049 on lineitem_by_part_102049 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.009..0.009 rows=1 loops=536)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.651 ms
+                         Execution Time: 11.240 ms
+               ->  Task
+                     Tuple data received from node: 1372 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.84..4904.74 rows=167 width=4) (actual time=0.376..9.123 rows=343 loops=1)
+                           ->  Bitmap Heap Scan on part_102200 part  (cost=5.55..219.22 rows=125 width=4) (actual time=0.241..0.746 rows=127 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=108
+                                 ->  Bitmap Index Scan on q20i3_102200  (cost=0.00..5.52 rows=123 width=0) (actual time=0.173..0.174 rows=127 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102232 on partsupp_102232 partsupp  (cost=0.29..37.47 rows=1 width=8) (actual time=0.028..0.064 rows=3 loops=127)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.012..0.012 rows=1 loops=508)
+                                         ->  Index Only Scan using q20i1_102072 on lineitem_by_part_102072 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.007..0.008 rows=1 loops=508)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 2.468 ms
+                         Execution Time: 9.517 ms
+               ->  Task
+                     Tuple data received from node: 1624 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.84..4935.84 rows=168 width=4) (actual time=0.284..7.469 rows=406 loops=1)
+                           ->  Bitmap Heap Scan on part_102191 part  (cost=5.55..219.58 rows=126 width=4) (actual time=0.205..0.581 rows=151 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=114
+                                 ->  Bitmap Index Scan on q20i3_102191  (cost=0.00..5.52 rows=123 width=0) (actual time=0.125..0.126 rows=151 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102223 on partsupp_102223 partsupp  (cost=0.29..37.42 rows=1 width=8) (actual time=0.020..0.044 rows=3 loops=151)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.008..0.008 rows=1 loops=604)
+                                         ->  Index Only Scan using q20i1_102063 on lineitem_by_part_102063 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.005..0.006 rows=1 loops=604)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.081 ms
+                         Execution Time: 7.744 ms
+               ->  Task
+                     Tuple data received from node: 1460 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4941.61 rows=168 width=4) (actual time=0.219..7.153 rows=365 loops=1)
+                           ->  Bitmap Heap Scan on part_102194 part  (cost=5.56..219.61 rows=126 width=4) (actual time=0.114..0.484 rows=132 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=103
+                                 ->  Bitmap Index Scan on q20i3_102194  (cost=0.00..5.53 rows=124 width=0) (actual time=0.060..0.061 rows=132 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102226 on partsupp_102226 partsupp  (cost=0.29..37.47 rows=1 width=8) (actual time=0.022..0.049 rows=3 loops=132)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.009..0.009 rows=1 loops=528)
+                                         ->  Index Only Scan using q20i1_102066 on lineitem_by_part_102066 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.006..0.006 rows=1 loops=528)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.306 ms
+                         Execution Time: 7.414 ms
+               ->  Task
+                     Tuple data received from node: 1212 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Nested Loop  (cost=5.85..4940.23 rows=168 width=4) (actual time=0.165..5.320 rows=303 loops=1)
+                           ->  Bitmap Heap Scan on part_102197 part  (cost=5.56..219.97 rows=126 width=4) (actual time=0.109..0.404 rows=112 loops=1)
+                                 Filter: ((p_name)::text ~~ 'forest%'::text)
+                                 Heap Blocks: exact=90
+                                 ->  Bitmap Index Scan on q20i3_102197  (cost=0.00..5.53 rows=124 width=0) (actual time=0.066..0.066 rows=112 loops=1)
+                                       Index Cond: (((p_name)::text ~>=~ 'forest'::text) AND ((p_name)::text ~<~ 'foresu'::text))
+                           ->  Index Only Scan using q20i2_102229 on partsupp_102229 partsupp  (cost=0.29..37.45 rows=1 width=8) (actual time=0.020..0.042 rows=3 loops=112)
+                                 Index Cond: (ps_partkey = part.p_partkey)
+                                 Filter: ((ps_availqty)::numeric > (SubPlan 1))
+                                 Rows Removed by Filter: 1
+                                 Heap Fetches: 0
+                                 SubPlan 1
+                                   ->  Aggregate  (cost=8.45..8.46 rows=1 width=32) (actual time=0.008..0.008 rows=1 loops=448)
+                                         ->  Index Only Scan using q20i1_102069 on lineitem_by_part_102069 lineitem_by_part  (cost=0.42..8.45 rows=1 width=5) (actual time=0.005..0.005 rows=1 loops=448)
+                                               Index Cond: ((l_partkey = partsupp.ps_partkey) AND (l_suppkey = partsupp.ps_suppkey) AND (l_shipdate >= '1994-01-01'::date) AND (l_shipdate < '1995-01-01'::date))
+                                               Heap Fetches: 0
+                         Planning Time: 1.086 ms
+                         Execution Time: 5.509 ms
+         Planning Time: 0.000 ms
+         Execution Time: 106.834 ms
+   Task Count: 1
+   Tuple data received from nodes: 18 kB
+   Tasks Shown: All
+   ->  Task
+         Tuple data received from node: 18 kB
+         Node: host=192.168.1.19 port=5432 dbname=tpch
+         ->  Sort  (cost=546.26..546.36 rows=40 width=51) (actual time=29.023..29.079 rows=367 loops=1)
+               Sort Key: supplier.s_name
+               Sort Method: quicksort  Memory: 53kB
+               ->  Hash Join  (cost=69.19..545.20 rows=40 width=51) (actual time=25.273..28.291 rows=367 loops=1)
+                     Hash Cond: (supplier.s_suppkey = intermediate_result.ps_suppkey)
+                     ->  Nested Loop  (cost=18.49..491.95 rows=800 width=55) (actual time=1.398..4.051 rows=818 loops=1)
+                           ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.017..0.030 rows=1 loops=1)
+                                 Filter: (n_name = 'CANADA'::bpchar)
+                                 Rows Removed by Filter: 24
+                           ->  Bitmap Heap Scan on supplier_102010 supplier  (cost=18.49..482.64 rows=800 width=59) (actual time=1.371..3.734 rows=818 loops=1)
+                                 Recheck Cond: (s_nationkey = nation.n_nationkey)
+                                 Heap Blocks: exact=380
+                                 ->  Bitmap Index Scan on q02i4_102010  (cost=0.00..18.29 rows=800 width=0) (actual time=1.191..1.192 rows=818 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                     ->  Hash  (cost=48.21..48.21 rows=200 width=4) (actual time=23.799..23.801 rows=8888 loops=1)
+                           Buckets: 16384 (originally 1024)  Batches: 1 (originally 1)  Memory Usage: 441kB
+                           ->  HashAggregate  (cost=46.21..48.21 rows=200 width=4) (actual time=17.178..20.034 rows=8888 loops=1)
+                                 Group Key: intermediate_result.ps_suppkey
+                                 Batches: 1  Memory Usage: 929kB
+                                 ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..43.71 rows=11747 width=4) (actual time=5.084..7.212 rows=11747 loops=1)
+             Planning Time: 2.448 ms
+             Execution Time: 29.846 ms
+ Planning Time: 6.977 ms
+ Execution Time: 523.082 ms
+(713 rows)
+

@@ -1,0 +1,765 @@
+SET
+                                                                                                                                           QUERY PLAN                                                                                                                                           
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=761.64..762.14 rows=200 width=60) (actual time=16428.563..16428.565 rows=2 loops=1)
+   Sort Key: remote_scan.l_shipmode
+   Sort Method: quicksort  Memory: 25kB
+   ->  HashAggregate  (cost=750.00..754.00 rows=200 width=60) (actual time=16428.526..16428.528 rows=2 loops=1)
+         Group Key: remote_scan.l_shipmode
+         Batches: 1  Memory Usage: 40kB
+         ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=60) (actual time=16428.488..16428.495 rows=64 loops=1)
+               Task Count: 32
+               Tuple data received from nodes: 1664 bytes
+               Tasks Shown: All
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67029.22..67099.20 rows=7 width=27) (actual time=16002.806..16003.038 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67029.22..67099.02 rows=14 width=27) (actual time=16001.601..16003.033 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66029.19..66097.38 rows=7 width=27) (actual time=15999.124..16000.326 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66029.19..66037.71 rows=3406 width=27) (actual time=15997.906..15998.297 rows=9507 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 904kB
+                                             ->  Parallel Hash Join  (cost=54687.36..65829.37 rows=3406 width=27) (actual time=14826.286..15994.144 rows=9507 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102097 orders  (cost=0.00..10151.88 rows=195188 width=20) (actual time=9.670..1107.386 rows=468451 loops=1)
+                                                   ->  Parallel Hash  (cost=54644.78..54644.78 rows=3406 width=15) (actual time=14815.380..14815.381 rows=9507 loops=1)
+                                                         Buckets: 16384 (originally 8192)  Batches: 1 (originally 1)  Memory Usage: 640kB
+                                                         ->  Parallel Seq Scan on lineitem_102033 lineitem  (cost=0.00..54644.78 rows=3406 width=15) (actual time=17.870..14806.049 rows=9507 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1862353
+                         Planning Time: 87.803 ms
+                         Execution Time: 16003.423 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67029.75..67100.49 rows=7 width=27) (actual time=15998.040..15998.292 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67029.75..67100.32 rows=14 width=27) (actual time=15996.331..15998.286 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66029.73..66098.68 rows=7 width=27) (actual time=15995.373..15997.080 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66029.73..66038.34 rows=3444 width=27) (actual time=15993.614..15994.087 rows=9783 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 920kB
+                                             ->  Parallel Hash Join  (cost=54688.02..65827.40 rows=3444 width=27) (actual time=13044.973..15989.068 rows=9783 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102093 orders  (cost=0.00..10150.02 rows=195002 width=20) (actual time=9.929..2865.652 rows=468004 loops=1)
+                                                   ->  Parallel Hash  (cost=54644.97..54644.97 rows=3444 width=15) (actual time=13034.615..13034.615 rows=9783 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102029 lineitem  (cost=0.00..54644.97 rows=3444 width=15) (actual time=13.887..13025.452 rows=9783 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1862182
+                         Planning Time: 73.383 ms
+                         Execution Time: 15998.520 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67257.48..67327.82 rows=7 width=27) (actual time=15972.819..15973.046 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67257.48..67327.65 rows=14 width=27) (actual time=15971.526..15973.040 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66257.46..66326.01 rows=7 width=27) (actual time=15970.524..15971.815 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66257.46..66266.02 rows=3424 width=27) (actual time=15969.061..15969.495 rows=9724 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 916kB
+                                             ->  Parallel Hash Join  (cost=54903.44..66056.44 rows=3424 width=27) (actual time=13163.005..15964.778 rows=9724 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102087 orders  (cost=0.00..10159.16 rows=195916 width=20) (actual time=9.370..2721.965 rows=470198 loops=1)
+                                                   ->  Parallel Hash  (cost=54860.64..54860.64 rows=3424 width=15) (actual time=13153.053..13153.054 rows=9724 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102023 lineitem  (cost=0.00..54860.64 rows=3424 width=15) (actual time=7.246..13143.684 rows=9724 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1870328
+                         Planning Time: 59.115 ms
+                         Execution Time: 15973.299 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67048.96..67121.72 rows=7 width=27) (actual time=15915.122..15915.364 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67048.96..67121.55 rows=14 width=27) (actual time=15913.232..15915.358 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66048.94..66119.91 rows=7 width=27) (actual time=15912.146..15914.033 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66048.94..66057.80 rows=3545 width=27) (actual time=15910.479..15910.972 rows=9520 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 905kB
+                                             ->  Parallel Hash Join  (cost=54697.95..65839.93 rows=3545 width=27) (actual time=13250.215..15906.057 rows=9520 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102089 orders  (cost=0.00..10151.48 rows=195148 width=20) (actual time=9.265..2571.568 rows=468354 loops=1)
+                                                   ->  Parallel Hash  (cost=54653.64..54653.64 rows=3545 width=15) (actual time=13240.277..13240.278 rows=9520 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 576kB
+                                                         ->  Parallel Seq Scan on lineitem_102025 lineitem  (cost=0.00..54653.64 rows=3545 width=15) (actual time=12.224..13231.191 rows=9520 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1862842
+                         Planning Time: 57.619 ms
+                         Execution Time: 15915.606 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67057.33..67127.87 rows=7 width=27) (actual time=15875.087..15875.384 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67057.33..67127.70 rows=14 width=27) (actual time=15872.910..15875.376 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66057.31..66126.06 rows=7 width=27) (actual time=15870.878..15873.051 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66057.31..66065.89 rows=3434 width=27) (actual time=15868.715..15869.390 rows=9515 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 905kB
+                                             ->  Parallel Hash Join  (cost=54712.43..65855.64 rows=3434 width=27) (actual time=13161.112..15864.378 rows=9515 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102105 orders  (cost=0.00..10152.60 rows=195260 width=20) (actual time=10.488..2627.746 rows=468624 loops=1)
+                                                   ->  Parallel Hash  (cost=54669.50..54669.50 rows=3434 width=15) (actual time=13149.475..13149.476 rows=9515 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 576kB
+                                                         ->  Parallel Seq Scan on lineitem_102041 lineitem  (cost=0.00..54669.50 rows=3434 width=15) (actual time=10.169..13140.535 rows=9515 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1864466
+                         Planning Time: 94.522 ms
+                         Execution Time: 15875.745 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67138.13..67211.11 rows=7 width=27) (actual time=15815.291..15815.532 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67138.13..67210.93 rows=14 width=27) (actual time=15814.156..15815.526 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66138.11..66209.30 rows=7 width=27) (actual time=15812.100..15813.232 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66138.11..66147.00 rows=3556 width=27) (actual time=15810.930..15811.301 rows=9693 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 915kB
+                                             ->  Parallel Hash Join  (cost=54788.22..65928.37 rows=3556 width=27) (actual time=13147.012..15806.541 rows=9693 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102099 orders  (cost=0.00..10150.22 rows=195022 width=20) (actual time=8.344..2575.871 rows=468053 loops=1)
+                                                   ->  Parallel Hash  (cost=54743.77..54743.77 rows=3556 width=15) (actual time=13137.199..13137.200 rows=9693 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102035 lineitem  (cost=0.00..54743.77 rows=3556 width=15) (actual time=19.872..13128.115 rows=9693 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1865235
+                         Planning Time: 93.856 ms
+                         Execution Time: 15815.923 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67064.35..67137.91 rows=7 width=27) (actual time=15747.314..15747.556 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67064.35..67137.73 rows=14 width=27) (actual time=15745.946..15747.550 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66064.32..66136.09 rows=7 width=27) (actual time=15745.052..15746.427 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66064.32..66073.29 rows=3585 width=27) (actual time=15743.610..15744.051 rows=9733 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 917kB
+                                             ->  Parallel Hash Join  (cost=54709.50..65852.67 rows=3585 width=27) (actual time=12992.689..15739.160 rows=9733 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102095 orders  (cost=0.00..10152.15 rows=195215 width=20) (actual time=8.988..2661.531 rows=468517 loops=1)
+                                                   ->  Parallel Hash  (cost=54664.69..54664.69 rows=3585 width=15) (actual time=12983.212..12983.212 rows=9733 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102031 lineitem  (cost=0.00..54664.69 rows=3585 width=15) (actual time=14.499..12974.074 rows=9733 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1863815
+                         Planning Time: 83.374 ms
+                         Execution Time: 15747.828 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67131.98..67205.76 rows=7 width=27) (actual time=15741.051..15741.292 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67131.98..67205.59 rows=14 width=27) (actual time=15739.759..15741.285 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66131.96..66203.95 rows=7 width=27) (actual time=15738.949..15740.238 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66131.96..66140.95 rows=3596 width=27) (actual time=15737.311..15737.736 rows=9771 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 919kB
+                                             ->  Parallel Hash Join  (cost=54779.19..65919.58 rows=3596 width=27) (actual time=12684.986..15732.598 rows=9771 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102081 orders  (cost=0.00..10150.27 rows=195027 width=20) (actual time=10.565..2962.792 rows=468065 loops=1)
+                                                   ->  Parallel Hash  (cost=54734.24..54734.24 rows=3596 width=15) (actual time=12673.967..12673.968 rows=9771 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102017 lineitem  (cost=0.00..54734.24 rows=3596 width=15) (actual time=3.473..12664.481 rows=9771 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1864358
+                         Planning Time: 37.699 ms
+                         Execution Time: 15741.474 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67238.23..67309.29 rows=7 width=27) (actual time=15726.068..15726.340 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67238.23..67309.11 rows=14 width=27) (actual time=15724.831..15726.333 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66238.20..66307.47 rows=7 width=27) (actual time=15723.477..15724.712 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66238.20..66246.85 rows=3460 width=27) (actual time=15722.332..15722.704 rows=9849 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 923kB
+                                             ->  Parallel Hash Join  (cost=54886.88..66034.81 rows=3460 width=27) (actual time=12802.209..15717.552 rows=9849 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102085 orders  (cost=0.00..10155.68 rows=195568 width=20) (actual time=10.912..2827.898 rows=469363 loops=1)
+                                                   ->  Parallel Hash  (cost=54843.62..54843.62 rows=3460 width=15) (actual time=12790.573..12790.574 rows=9849 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102021 lineitem  (cost=0.00..54843.62 rows=3460 width=15) (actual time=5.233..12781.612 rows=9849 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1868637
+                         Planning Time: 39.882 ms
+                         Execution Time: 15726.638 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67244.19..67314.61 rows=7 width=27) (actual time=15718.578..15718.801 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67244.19..67314.43 rows=14 width=27) (actual time=15717.352..15718.793 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66244.16..66312.79 rows=7 width=27) (actual time=15714.398..15715.621 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66244.16..66252.73 rows=3428 width=27) (actual time=15712.913..15713.407 rows=9642 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 912kB
+                                             ->  Parallel Hash Join  (cost=54893.43..66042.89 rows=3428 width=27) (actual time=12919.475..15708.378 rows=9642 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102101 orders  (cost=0.00..10156.78 rows=195678 width=20) (actual time=10.077..2701.042 rows=469628 loops=1)
+                                                   ->  Parallel Hash  (cost=54850.58..54850.58 rows=3428 width=15) (actual time=12908.180..12908.181 rows=9642 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102037 lineitem  (cost=0.00..54850.58 rows=3428 width=15) (actual time=13.983..12899.310 rows=9642 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1869653
+                         Planning Time: 84.801 ms
+                         Execution Time: 15719.136 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=66954.31..67026.01 rows=7 width=27) (actual time=15681.803..15682.060 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=66954.31..67025.83 rows=14 width=27) (actual time=15680.643..15682.054 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=65954.28..66024.19 rows=7 width=27) (actual time=15679.874..15681.032 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=65954.28..65963.01 rows=3492 width=27) (actual time=15678.502..15678.931 rows=9794 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 920kB
+                                             ->  Parallel Hash Join  (cost=54609.13..65748.78 rows=3492 width=27) (actual time=12842.944..15673.872 rows=9794 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102083 orders  (cost=0.00..10150.07 rows=195007 width=20) (actual time=10.492..2746.759 rows=468016 loops=1)
+                                                   ->  Parallel Hash  (cost=54565.48..54565.48 rows=3492 width=15) (actual time=12832.026..12832.027 rows=9794 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102019 lineitem  (cost=0.00..54565.48 rows=3492 width=15) (actual time=3.513..12822.654 rows=9794 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1860455
+                         Planning Time: 34.223 ms
+                         Execution Time: 15682.298 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67159.72..67232.48 rows=7 width=27) (actual time=15678.935..15679.164 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67159.72..67232.31 rows=14 width=27) (actual time=15677.604..15679.158 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66159.70..66230.67 rows=7 width=27) (actual time=15676.782..15678.110 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66159.70..66168.56 rows=3545 width=27) (actual time=15675.446..15675.870 rows=9880 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 925kB
+                                             ->  Parallel Hash Join  (cost=54802.67..65950.69 rows=3545 width=27) (actual time=12851.006..15671.089 rows=9880 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102091 orders  (cost=0.00..10155.50 rows=195550 width=20) (actual time=10.504..2739.290 rows=469321 loops=1)
+                                                   ->  Parallel Hash  (cost=54758.35..54758.35 rows=3545 width=15) (actual time=12840.049..12840.049 rows=9880 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102027 lineitem  (cost=0.00..54758.35 rows=3545 width=15) (actual time=6.681..12831.037 rows=9880 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1866627
+                         Planning Time: 66.718 ms
+                         Execution Time: 15679.431 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67034.52..67106.74 rows=7 width=27) (actual time=15663.562..15663.790 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67034.52..67106.57 rows=14 width=27) (actual time=15662.286..15663.784 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66034.50..66104.93 rows=7 width=27) (actual time=15660.268..15661.541 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66034.50..66043.29 rows=3518 width=27) (actual time=15658.716..15659.157 rows=9598 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 909kB
+                                             ->  Parallel Hash Join  (cost=54684.45..65827.28 rows=3518 width=27) (actual time=12887.825..15654.072 rows=9598 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102103 orders  (cost=0.00..10152.11 rows=195211 width=20) (actual time=10.170..2683.667 rows=468506 loops=1)
+                                                   ->  Parallel Hash  (cost=54640.48..54640.48 rows=3518 width=15) (actual time=12876.533..12876.534 rows=9598 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102039 lineitem  (cost=0.00..54640.48 rows=3518 width=15) (actual time=5.981..12867.022 rows=9598 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1861722
+                         Planning Time: 84.700 ms
+                         Execution Time: 15664.124 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67231.09..67302.19 rows=7 width=27) (actual time=15217.172..15217.659 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67231.09..67302.02 rows=14 width=27) (actual time=15214.404..15217.648 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66231.07..66300.38 rows=7 width=27) (actual time=15213.827..15216.589 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66231.07..66239.72 rows=3462 width=27) (actual time=15210.220..15211.262 rows=9846 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 923kB
+                                             ->  Parallel Hash Join  (cost=54878.40..66027.54 rows=3462 width=27) (actual time=13852.952..15199.395 rows=9846 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102098 orders  (cost=0.00..10156.48 rows=195648 width=20) (actual time=0.432..1139.065 rows=469554 loops=1)
+                                                   ->  Parallel Hash  (cost=54835.12..54835.12 rows=3462 width=15) (actual time=13852.148..13852.149 rows=9846 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102034 lineitem  (cost=0.00..54835.12 rows=3462 width=15) (actual time=12.491..13839.940 rows=9846 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1867833
+                         Planning Time: 71.321 ms
+                         Execution Time: 15217.887 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67153.63..67225.19 rows=7 width=27) (actual time=14676.998..14678.104 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67153.63..67225.01 rows=14 width=27) (actual time=14671.198..14678.083 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66153.60..66223.37 rows=7 width=27) (actual time=14670.589..14676.379 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66153.60..66162.31 rows=3485 width=27) (actual time=14664.718..14666.629 rows=9542 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 906kB
+                                             ->  Parallel Hash Join  (cost=54799.88..65948.56 rows=3485 width=27) (actual time=12815.242..14653.011 rows=9542 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102100 orders  (cost=0.00..10156.11 rows=195611 width=20) (actual time=1.694..1615.672 rows=469467 loops=1)
+                                                   ->  Parallel Hash  (cost=54756.31..54756.31 rows=3485 width=15) (actual time=12813.174..12813.175 rows=9542 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 576kB
+                                                         ->  Parallel Seq Scan on lineitem_102036 lineitem  (cost=0.00..54756.31 rows=3485 width=15) (actual time=13.337..12802.221 rows=9542 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1866788
+                         Planning Time: 67.668 ms
+                         Execution Time: 14678.534 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67039.22..67111.54 rows=7 width=27) (actual time=14097.844..14098.107 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67039.22..67111.37 rows=14 width=27) (actual time=14096.644..14098.096 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66039.20..66109.73 rows=7 width=27) (actual time=14095.547..14096.743 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66039.20..66048.01 rows=3523 width=27) (actual time=14094.095..14094.543 rows=9661 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 913kB
+                                             ->  Parallel Hash Join  (cost=54691.10..65831.65 rows=3523 width=27) (actual time=12392.104..14085.692 rows=9661 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102106 orders  (cost=0.00..10150.58 rows=195058 width=20) (actual time=6.729..1518.334 rows=468139 loops=1)
+                                                   ->  Parallel Hash  (cost=54647.06..54647.06 rows=3523 width=15) (actual time=12384.496..12384.497 rows=9661 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102042 lineitem  (cost=0.00..54647.06 rows=3523 width=15) (actual time=17.797..12373.502 rows=9661 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1862440
+                         Planning Time: 95.550 ms
+                         Execution Time: 14098.374 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67143.43..67214.97 rows=7 width=27) (actual time=13042.804..13043.051 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67143.43..67214.80 rows=14 width=27) (actual time=13041.070..13043.044 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66143.41..66213.16 rows=7 width=27) (actual time=13040.305..13042.037 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66143.41..66152.12 rows=3484 width=27) (actual time=13038.252..13038.832 rows=10004 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 932kB
+                                             ->  Parallel Hash Join  (cost=54794.54..65938.44 rows=3484 width=27) (actual time=11541.608..13033.724 rows=10004 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102088 orders  (cost=0.00..10152.92 rows=195292 width=20) (actual time=8.754..1409.498 rows=468700 loops=1)
+                                                   ->  Parallel Hash  (cost=54750.99..54750.99 rows=3484 width=15) (actual time=11532.384..11532.384 rows=10004 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102024 lineitem  (cost=0.00..54750.99 rows=3484 width=15) (actual time=2.878..11520.771 rows=10004 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1865319
+                         Planning Time: 32.531 ms
+                         Execution Time: 13043.261 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=66935.00..67006.90 rows=7 width=27) (actual time=12909.768..12910.222 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=66935.00..67006.73 rows=14 width=27) (actual time=12908.084..12910.210 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=65934.98..66005.09 rows=7 width=27) (actual time=12906.868..12908.546 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=65934.98..65943.73 rows=3502 width=27) (actual time=12905.636..12906.094 rows=9831 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 922kB
+                                             ->  Parallel Hash Join  (cost=54591.31..65728.81 rows=3502 width=27) (actual time=10704.018..12901.178 rows=9831 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102086 orders  (cost=0.00..10148.61 rows=194861 width=20) (actual time=5.555..2108.964 rows=467667 loops=1)
+                                                   ->  Parallel Hash  (cost=54547.53..54547.53 rows=3502 width=15) (actual time=10697.214..10697.215 rows=9831 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102022 lineitem  (cost=0.00..54547.53 rows=3502 width=15) (actual time=1.989..10686.129 rows=9831 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1858546
+                         Planning Time: 18.058 ms
+                         Execution Time: 12910.545 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67052.78..67123.44 rows=7 width=27) (actual time=12896.984..12897.225 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67052.78..67123.26 rows=14 width=27) (actual time=12895.634..12897.218 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66052.75..66121.62 rows=7 width=27) (actual time=12895.034..12896.381 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66052.75..66061.35 rows=3440 width=27) (actual time=12893.563..12894.004 rows=9609 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 910kB
+                                             ->  Parallel Hash Join  (cost=54709.58..65850.68 rows=3440 width=27) (actual time=10570.145..12889.299 rows=9609 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102104 orders  (cost=0.00..10151.18 rows=195118 width=20) (actual time=5.971..2234.916 rows=468283 loops=1)
+                                                   ->  Parallel Hash  (cost=54666.58..54666.58 rows=3440 width=15) (actual time=10563.704..10563.704 rows=9609 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102040 lineitem  (cost=0.00..54666.58 rows=3440 width=15) (actual time=4.752..10553.087 rows=9609 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1864107
+                         Planning Time: 70.576 ms
+                         Execution Time: 12897.459 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67262.36..67334.86 rows=7 width=27) (actual time=12800.001..12800.342 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67262.36..67334.69 rows=14 width=27) (actual time=12798.534..12800.331 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66262.34..66333.05 rows=7 width=27) (actual time=12797.704..12799.163 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66262.34..66271.17 rows=3532 width=27) (actual time=12796.383..12796.824 rows=9788 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 920kB
+                                             ->  Parallel Hash Join  (cost=54904.79..66054.19 rows=3532 width=27) (actual time=10521.526..12791.899 rows=9788 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102090 orders  (cost=0.00..10156.46 rows=195646 width=20) (actual time=6.710..2184.171 rows=469550 loops=1)
+                                                   ->  Parallel Hash  (cost=54860.64..54860.64 rows=3532 width=15) (actual time=10514.433..10514.433 rows=9788 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102026 lineitem  (cost=0.00..54860.64 rows=3532 width=15) (actual time=3.884..10503.207 rows=9788 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1870407
+                         Planning Time: 37.334 ms
+                         Execution Time: 12800.508 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67227.74..67298.88 rows=7 width=27) (actual time=12703.261..12703.538 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67227.74..67298.71 rows=14 width=27) (actual time=12701.960..12703.531 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66227.72..66297.07 rows=7 width=27) (actual time=12701.246..12702.545 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66227.72..66236.38 rows=3464 width=27) (actual time=12699.906..12700.324 rows=9857 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 924kB
+                                             ->  Parallel Hash Join  (cost=54878.46..66024.07 rows=3464 width=27) (actual time=10732.697..12695.349 rows=9857 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102092 orders  (cost=0.00..10154.12 rows=195412 width=20) (actual time=7.845..1879.652 rows=468989 loops=1)
+                                                   ->  Parallel Hash  (cost=54835.16..54835.16 rows=3464 width=15) (actual time=10724.456..10724.457 rows=9857 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102028 lineitem  (cost=0.00..54835.16 rows=3464 width=15) (actual time=8.853..10713.710 rows=9857 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1867793
+                         Planning Time: 44.862 ms
+                         Execution Time: 12703.733 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67169.41..67242.27 rows=7 width=27) (actual time=12661.853..12662.161 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67169.41..67242.09 rows=14 width=27) (actual time=12659.412..12662.154 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66169.38..66240.45 rows=7 width=27) (actual time=12657.755..12660.193 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66169.38..66178.26 rows=3550 width=27) (actual time=12654.893..12655.727 rows=9726 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 916kB
+                                             ->  Parallel Hash Join  (cost=54812.30..65960.05 rows=3550 width=27) (actual time=10607.908..12649.948 rows=9726 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102082 orders  (cost=0.00..10155.30 rows=195530 width=20) (actual time=6.874..1952.931 rows=469273 loops=1)
+                                                   ->  Parallel Hash  (cost=54767.93..54767.93 rows=3550 width=15) (actual time=10598.155..10598.156 rows=9726 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102018 lineitem  (cost=0.00..54767.93 rows=3550 width=15) (actual time=4.191..10587.133 rows=9726 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1867684
+                         Planning Time: 20.805 ms
+                         Execution Time: 12662.505 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=66940.70..67011.80 rows=7 width=27) (actual time=12650.340..12650.703 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=66940.70..67011.63 rows=14 width=27) (actual time=12647.834..12650.689 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=65940.68..66009.99 rows=7 width=27) (actual time=12647.043..12649.541 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=65940.68..65949.33 rows=3462 width=27) (actual time=12645.228..12645.901 rows=9661 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 913kB
+                                             ->  Parallel Hash Join  (cost=54599.43..65737.16 rows=3462 width=27) (actual time=10639.108..12640.782 rows=9661 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102094 orders  (cost=0.00..10148.87 rows=194887 width=20) (actual time=6.644..1921.381 rows=467729 loops=1)
+                                                   ->  Parallel Hash  (cost=54556.16..54556.16 rows=3462 width=15) (actual time=10626.836..10626.836 rows=9661 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102030 lineitem  (cost=0.00..54556.16 rows=3462 width=15) (actual time=14.113..10615.627 rows=9661 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1859817
+                         Planning Time: 39.600 ms
+                         Execution Time: 12650.931 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67161.30..67233.51 rows=7 width=27) (actual time=12648.916..12649.304 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67161.30..67233.33 rows=14 width=27) (actual time=12646.090..12649.295 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66161.28..66231.69 rows=7 width=27) (actual time=12644.760..12647.582 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66161.28..66170.07 rows=3517 width=27) (actual time=12641.991..12642.837 rows=9859 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 924kB
+                                             ->  Parallel Hash Join  (cost=54806.08..65954.13 rows=3517 width=27) (actual time=10594.313..12637.281 rows=9859 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102084 orders  (cost=0.00..10155.60 rows=195560 width=20) (actual time=7.655..1955.240 rows=469344 loops=1)
+                                                   ->  Parallel Hash  (cost=54762.11..54762.11 rows=3517 width=15) (actual time=10585.929..10585.930 rows=9859 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102020 lineitem  (cost=0.00..54762.11 rows=3517 width=15) (actual time=9.221..10574.429 rows=9859 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1866961
+                         Planning Time: 19.619 ms
+                         Execution Time: 12649.591 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67230.95..67302.27 rows=7 width=27) (actual time=12582.164..12582.540 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67230.95..67302.09 rows=14 width=27) (actual time=12579.906..12582.533 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66230.92..66300.45 rows=7 width=27) (actual time=12579.273..12581.528 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66230.92..66239.61 rows=3473 width=27) (actual time=12577.414..12578.044 rows=9894 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 926kB
+                                             ->  Parallel Hash Join  (cost=54879.01..66026.68 rows=3473 width=27) (actual time=10557.899..12572.655 rows=9894 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102096 orders  (cost=0.00..10155.47 rows=195547 width=20) (actual time=7.211..1925.880 rows=469312 loops=1)
+                                                   ->  Parallel Hash  (cost=54835.59..54835.59 rows=3473 width=15) (actual time=10550.238..10550.239 rows=9894 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102032 lineitem  (cost=0.00..54835.59 rows=3473 width=15) (actual time=11.912..10538.771 rows=9894 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1867832
+                         Planning Time: 71.106 ms
+                         Execution Time: 12582.735 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67039.35..67110.41 rows=7 width=27) (actual time=12577.413..12577.663 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67039.35..67110.24 rows=14 width=27) (actual time=12575.244..12577.655 rows=2 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=66039.33..66108.60 rows=7 width=27) (actual time=12574.615..12576.780 rows=2 loops=1)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66039.33..66047.98 rows=3460 width=27) (actual time=12572.103..12572.788 rows=9705 loops=1)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 915kB
+                                             ->  Parallel Hash Join  (cost=54696.34..65835.94 rows=3460 width=27) (actual time=10559.280..12567.578 rows=9705 loops=1)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102102 orders  (cost=0.00..10150.12 rows=195012 width=20) (actual time=6.452..1924.325 rows=468028 loops=1)
+                                                   ->  Parallel Hash  (cost=54653.09..54653.09 rows=3460 width=15) (actual time=10552.495..10552.495 rows=9705 loops=1)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102038 lineitem  (cost=0.00..54653.09 rows=3460 width=15) (actual time=13.812..10541.578 rows=9705 loops=1)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 1862766
+                         Planning Time: 79.330 ms
+                         Execution Time: 12577.862 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67137.03..67209.85 rows=7 width=27) (actual time=8555.027..8559.791 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67137.03..67209.67 rows=14 width=27) (actual time=8553.933..8559.777 rows=6 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=66137.00..66208.03 rows=7 width=27) (actual time=8521.816..8522.895 rows=2 loops=3)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66137.00..66145.87 rows=3548 width=27) (actual time=8520.881..8521.185 rows=3189 loops=3)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 272kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 272kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 269kB
+                                             ->  Parallel Hash Join  (cost=54781.35..65927.80 rows=3548 width=27) (actual time=2967.374..8517.538 rows=3189 loops=3)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102079 orders  (cost=0.00..10154.45 rows=195445 width=20) (actual time=15.480..5512.516 rows=156356 loops=3)
+                                                   ->  Parallel Hash  (cost=54737.00..54737.00 rows=3548 width=15) (actual time=2947.517..2947.518 rows=3189 loops=3)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 640kB
+                                                         ->  Parallel Seq Scan on lineitem_102015 lineitem  (cost=0.00..54737.00 rows=3548 width=15) (actual time=2.879..2945.284 rows=3189 loops=3)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 621562
+                         Planning Time: 17.660 ms
+                         Execution Time: 8560.295 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=66945.77..67015.91 rows=7 width=27) (actual time=8412.105..8415.540 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=66945.77..67015.73 rows=14 width=27) (actual time=8410.632..8415.524 rows=6 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=65945.74..66014.09 rows=7 width=27) (actual time=8396.016..8396.949 rows=2 loops=3)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=65945.74..65954.28 rows=3414 width=27) (actual time=8395.043..8395.333 rows=3160 loops=3)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 279kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 265kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 265kB
+                                             ->  Parallel Hash Join  (cost=54603.21..65745.39 rows=3414 width=27) (actual time=2981.133..8391.617 rows=3160 loops=3)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102075 orders  (cost=0.00..10151.97 rows=195197 width=20) (actual time=12.407..5372.140 rows=156157 loops=3)
+                                                   ->  Parallel Hash  (cost=54560.53..54560.53 rows=3414 width=15) (actual time=2964.096..2964.097 rows=3160 loops=3)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 608kB
+                                                         ->  Parallel Seq Scan on lineitem_102011 lineitem  (cost=0.00..54560.53 rows=3414 width=15) (actual time=1.341..2958.749 rows=3160 loops=3)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 620062
+                         Planning Time: 10.111 ms
+                         Execution Time: 8416.036 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67040.77..67111.79 rows=7 width=27) (actual time=7503.639..7508.100 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67040.77..67111.61 rows=14 width=27) (actual time=7502.746..7508.084 rows=6 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=66040.74..66109.97 rows=7 width=27) (actual time=7465.998..7467.028 rows=2 loops=3)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66040.74..66049.39 rows=3458 width=27) (actual time=7464.857..7465.177 rows=3224 loops=3)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 266kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 280kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 273kB
+                                             ->  Parallel Hash Join  (cost=54695.11..65837.49 rows=3458 width=27) (actual time=2000.543..7461.231 rows=3224 loops=3)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102077 orders  (cost=0.00..10151.98 rows=195198 width=20) (actual time=10.101..5417.791 rows=156158 loops=3)
+                                                   ->  Parallel Hash  (cost=54651.89..54651.89 rows=3458 width=15) (actual time=1985.338..1985.339 rows=3224 loops=3)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 640kB
+                                                         ->  Parallel Seq Scan on lineitem_102013 lineitem  (cost=0.00..54651.89 rows=3458 width=15) (actual time=1.453..1983.237 rows=3224 loops=3)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 620851
+                         Planning Time: 14.057 ms
+                         Execution Time: 7508.593 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67127.75..67197.88 rows=7 width=27) (actual time=5481.226..5486.417 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67127.75..67197.70 rows=14 width=27) (actual time=5479.470..5486.400 rows=6 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=66127.73..66196.06 rows=7 width=27) (actual time=5441.038..5442.552 rows=2 loops=3)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66127.73..66136.26 rows=3413 width=27) (actual time=5439.682..5440.105 rows=3261 loops=3)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 274kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 276kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 275kB
+                                             ->  Parallel Hash Join  (cost=54784.11..65927.44 rows=3413 width=27) (actual time=1711.287..5435.186 rows=3261 loops=3)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102078 orders  (cost=0.00..10152.74 rows=195274 width=20) (actual time=5.694..3649.324 rows=156219 loops=3)
+                                                   ->  Parallel Hash  (cost=54741.45..54741.45 rows=3413 width=15) (actual time=1704.853..1704.854 rows=3261 loops=3)
+                                                         Buckets: 16384 (originally 8192)  Batches: 1 (originally 1)  Memory Usage: 704kB
+                                                         ->  Parallel Seq Scan on lineitem_102014 lineitem  (cost=0.00..54741.45 rows=3413 width=15) (actual time=2.603..1698.951 rows=3261 loops=3)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 621741
+                         Planning Time: 19.388 ms
+                         Execution Time: 5487.322 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67168.35..67241.77 rows=7 width=27) (actual time=5357.405..5362.218 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67168.35..67241.59 rows=14 width=27) (actual time=5355.531..5362.201 rows=6 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=66168.32..66239.95 rows=7 width=27) (actual time=5323.430..5325.037 rows=2 loops=3)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66168.32..66177.27 rows=3578 width=27) (actual time=5322.103..5322.532 rows=3206 loops=3)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 271kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 274kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 271kB
+                                             ->  Parallel Hash Join  (cost=54806.65..65957.13 rows=3578 width=27) (actual time=1620.298..5316.737 rows=3206 loops=3)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102080 orders  (cost=0.00..10157.05 rows=195705 width=20) (actual time=6.256..3625.628 rows=156564 loops=3)
+                                                   ->  Parallel Hash  (cost=54761.93..54761.93 rows=3578 width=15) (actual time=1611.136..1611.137 rows=3206 loops=3)
+                                                         Buckets: 16384  Batches: 1  Memory Usage: 640kB
+                                                         ->  Parallel Seq Scan on lineitem_102016 lineitem  (cost=0.00..54761.93 rows=3578 width=15) (actual time=2.574..1604.657 rows=3206 loops=3)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 622404
+                         Planning Time: 17.284 ms
+                         Execution Time: 5362.749 ms
+               ->  Task
+                     Tuple data received from node: 52 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=67120.35..67190.39 rows=7 width=27) (actual time=5339.604..5342.920 rows=2 loops=1)
+                           Group Key: lineitem.l_shipmode
+                           ->  Gather Merge  (cost=67120.35..67190.22 rows=14 width=27) (actual time=5338.271..5342.904 rows=6 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=66120.33..66188.58 rows=7 width=27) (actual time=5318.168..5318.977 rows=2 loops=3)
+                                       Group Key: lineitem.l_shipmode
+                                       ->  Sort  (cost=66120.33..66128.85 rows=3409 width=27) (actual time=5317.295..5317.554 rows=3230 loops=3)
+                                             Sort Key: lineitem.l_shipmode
+                                             Sort Method: quicksort  Memory: 276kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 271kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 272kB
+                                             ->  Parallel Hash Join  (cost=54777.96..65920.30 rows=3409 width=27) (actual time=1796.285..5312.610 rows=3230 loops=3)
+                                                   Hash Cond: (orders.o_orderkey = lineitem.l_orderkey)
+                                                   ->  Parallel Seq Scan on orders_102076 orders  (cost=0.00..10152.10 rows=195210 width=20) (actual time=6.346..3435.289 rows=156168 loops=3)
+                                                   ->  Parallel Hash  (cost=54735.34..54735.34 rows=3409 width=15) (actual time=1786.518..1786.519 rows=3230 loops=3)
+                                                         Buckets: 8192  Batches: 1  Memory Usage: 544kB
+                                                         ->  Parallel Seq Scan on lineitem_102012 lineitem  (cost=0.00..54735.34 rows=3409 width=15) (actual time=1.574..1781.260 rows=3230 loops=3)
+                                                               Filter: ((l_commitdate < l_receiptdate) AND (l_shipdate < l_commitdate) AND (l_receiptdate >= '1994-01-01'::date) AND (l_receiptdate < '1995-01-01'::date) AND ((l_shipmode = 'MAIL'::bpchar) OR (l_shipmode = 'SHIP'::bpchar)))
+                                                               Rows Removed by Filter: 621475
+                         Planning Time: 6.711 ms
+                         Execution Time: 5343.310 ms
+ Planning Time: 4.473 ms
+ Execution Time: 16428.732 ms
+(760 rows)
+

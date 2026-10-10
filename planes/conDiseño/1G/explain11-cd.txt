@@ -1,0 +1,1305 @@
+SET
+                                                                                              QUERY PLAN                                                                                               
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=11041.82..11291.82 rows=100000 width=36) (actual time=155.525..155.584 rows=1048 loops=1)
+   Sort Key: remote_scan.value DESC
+   Sort Method: quicksort  Memory: 89kB
+   ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=36) (actual time=155.057..155.120 rows=1048 loops=1)
+         ->  Distributed Subplan 1_1
+               Subplan Duration: 199.93 ms
+               Intermediate Data Size: 22 bytes
+               Result destination: Send to 2 nodes
+               ->  Aggregate  (cost=250.00..250.01 rows=1 width=32) (actual time=115.731..115.732 rows=1 loops=1)
+                     ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=32) (actual time=115.713..115.716 rows=32 loops=1)
+                           Task Count: 32
+                           Tuple data received from nodes: 510 bytes
+                           Tasks Shown: All
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.07..196.08 rows=1 width=32) (actual time=6.215..6.218 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=996 width=10) (actual time=0.074..4.538 rows=946 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.058..0.499 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.024..0.040 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.031..0.290 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102229 on partsupp_102229 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.007..0.008 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.457 ms
+                                     Execution Time: 10.742 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.27..196.28 rows=1 width=32) (actual time=8.959..8.962 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1001 width=10) (actual time=0.087..7.310 rows=1005 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.070..3.578 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.029..0.040 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.036..3.305 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102212 on partsupp_102212 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.006..0.007 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.697 ms
+                                     Execution Time: 9.060 ms
+                           ->  Task
+                                 Tuple data received from node: 14 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.25..196.26 rows=1 width=32) (actual time=7.349..7.352 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=999 width=10) (actual time=0.073..5.965 rows=972 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.058..0.456 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.024..0.040 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.030..0.269 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102234 on partsupp_102234 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.005..0.012 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.626 ms
+                                     Execution Time: 7.448 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.06..196.07 rows=1 width=32) (actual time=7.007..7.011 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=995 width=10) (actual time=0.073..5.019 rows=1023 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.058..0.528 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.039 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.031..0.302 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102214 on partsupp_102214 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.007..0.009 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.602 ms
+                                     Execution Time: 7.106 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.50..196.51 rows=1 width=32) (actual time=6.993..6.996 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.92 rows=1011 width=10) (actual time=0.066..5.676 rows=1034 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.053..0.432 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.022..0.032 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.028..0.222 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102231 on partsupp_102231 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.011..0.012 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.441 ms
+                                     Execution Time: 7.083 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.09..196.10 rows=1 width=32) (actual time=6.923..6.927 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=999 width=10) (actual time=0.098..5.016 rows=980 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.079..0.551 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.032..0.049 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.042..0.316 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102204 on partsupp_102204 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.007..0.009 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.332 ms
+                                     Execution Time: 7.035 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=195.87..195.88 rows=1 width=32) (actual time=6.850..6.854 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.44 rows=991 width=10) (actual time=0.087..4.988 rows=974 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.070..0.558 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.029..0.046 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.036..0.307 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102232 on partsupp_102232 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.007..0.009 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.715 ms
+                                     Execution Time: 6.942 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.06..196.07 rows=1 width=32) (actual time=6.625..6.627 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=995 width=10) (actual time=0.078..4.454 rows=966 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.051..0.657 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.021..0.030 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.331 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102233 on partsupp_102233 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.006..0.008 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.486 ms
+                                     Execution Time: 6.707 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.49..196.50 rows=1 width=32) (actual time=6.184..6.187 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.92 rows=1009 width=10) (actual time=0.078..4.428 rows=1006 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.063..0.481 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.025..0.040 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.033..0.272 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102211 on partsupp_102211 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.006..0.008 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.217 ms
+                                     Execution Time: 6.279 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.26..196.27 rows=1 width=32) (actual time=6.120..6.123 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1000 width=10) (actual time=0.071..4.410 rows=983 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.051..0.466 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.021..0.035 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.266 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102213 on partsupp_102213 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.006..0.008 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.357 ms
+                                     Execution Time: 6.207 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.05..196.06 rows=1 width=32) (actual time=5.980..5.983 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=994 width=10) (actual time=0.104..4.316 rows=985 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.065..0.479 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.029..0.044 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.031..0.266 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102203 on partsupp_102203 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.006..0.008 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.207 ms
+                                     Execution Time: 6.098 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=195.87..195.88 rows=1 width=32) (actual time=4.934..4.937 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.44 rows=990 width=10) (actual time=0.060..3.551 rows=1020 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.049..0.417 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.020..0.038 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.025..0.232 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102220 on partsupp_102220 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.005..0.006 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.045 ms
+                                     Execution Time: 5.016 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.25..196.26 rows=1 width=32) (actual time=4.537..4.541 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=999 width=10) (actual time=0.055..3.321 rows=1011 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.045..0.409 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.019..0.034 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.023..0.236 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102226 on partsupp_102226 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.005..0.006 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.986 ms
+                                     Execution Time: 4.617 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.50..196.51 rows=1 width=32) (actual time=4.441..4.444 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.92 rows=1011 width=10) (actual time=0.130..3.251 rows=982 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.111..0.461 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.034 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.084..0.251 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102218 on partsupp_102218 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.006 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.626 ms
+                                     Execution Time: 4.538 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.26..196.27 rows=1 width=32) (actual time=4.185..4.188 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1000 width=10) (actual time=0.093..3.084 rows=1023 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.082..0.408 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.019..0.031 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.034..0.217 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102222 on partsupp_102222 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.274 ms
+                                     Execution Time: 4.260 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.71..196.72 rows=1 width=32) (actual time=4.002..4.005 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..189.08 rows=1017 width=10) (actual time=0.063..2.949 rows=1045 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.052..0.355 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.033 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.025..0.189 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102228 on partsupp_102228 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.121 ms
+                                     Execution Time: 4.088 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.26..196.27 rows=1 width=32) (actual time=3.868..3.871 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1000 width=10) (actual time=0.095..2.844 rows=999 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.085..0.369 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.056..0.066 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.025..0.184 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102208 on partsupp_102208 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.025 ms
+                                     Execution Time: 3.945 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.48..196.49 rows=1 width=32) (actual time=3.798..3.800 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.92 rows=1008 width=10) (actual time=0.063..2.801 rows=990 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.052..0.341 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.032 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.025..0.181 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102230 on partsupp_102230 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.114 ms
+                                     Execution Time: 3.884 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.93..196.94 rows=1 width=32) (actual time=3.776..3.779 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..189.24 rows=1026 width=10) (actual time=0.066..2.804 rows=964 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.055..0.337 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.025..0.035 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.185 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102206 on partsupp_102206 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.387 ms
+                                     Execution Time: 3.859 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.28..196.29 rows=1 width=32) (actual time=3.743..3.745 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1003 width=10) (actual time=0.060..2.748 rows=975 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.049..0.357 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.020..0.030 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.026..0.190 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102216 on partsupp_102216 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.046 ms
+                                     Execution Time: 3.820 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.48..196.49 rows=1 width=32) (actual time=3.711..3.714 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.92 rows=1008 width=10) (actual time=0.065..2.740 rows=954 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.054..0.329 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.032 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.182 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102224 on partsupp_102224 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.102 ms
+                                     Execution Time: 3.796 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.58 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.06..196.07 rows=1 width=32) (actual time=3.663..3.665 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=995 width=10) (actual time=0.060..2.727 rows=925 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.049..0.327 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.020..0.030 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.025..0.182 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102210 on partsupp_102210 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.038 ms
+                                     Execution Time: 3.738 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.25..196.26 rows=1 width=32) (actual time=3.591..3.593 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=999 width=10) (actual time=0.055..2.671 rows=1023 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.044..0.314 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.027 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.023..0.178 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102223 on partsupp_102223 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.004 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.016 ms
+                                     Execution Time: 3.673 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.31..196.32 rows=1 width=32) (actual time=3.587..3.589 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1007 width=10) (actual time=0.055..2.623 rows=989 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.044..0.313 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.028 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.023..0.168 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102225 on partsupp_102225 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.960 ms
+                                     Execution Time: 3.657 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.30..196.31 rows=1 width=32) (actual time=3.572..3.575 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1006 width=10) (actual time=0.055..2.647 rows=962 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.045..0.403 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.027 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.024..0.270 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102207 on partsupp_102207 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.004 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.974 ms
+                                     Execution Time: 3.642 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.47..196.48 rows=1 width=32) (actual time=3.555..3.558 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.92 rows=1007 width=10) (actual time=0.052..2.623 rows=956 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.042..0.325 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.017..0.027 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.022..0.183 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102219 on partsupp_102219 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.926 ms
+                                     Execution Time: 3.623 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=195.84..195.85 rows=1 width=32) (actual time=3.526..3.529 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.44 rows=987 width=10) (actual time=0.054..2.627 rows=1003 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.043..0.300 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.027 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.022..0.160 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102221 on partsupp_102221 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.004..0.005 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.950 ms
+                                     Execution Time: 3.598 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.03..196.04 rows=1 width=32) (actual time=3.519..3.521 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=991 width=10) (actual time=0.053..2.581 rows=998 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.043..0.292 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.027 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.022..0.159 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102209 on partsupp_102209 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.003..0.004 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.995 ms
+                                     Execution Time: 3.587 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.05..196.06 rows=1 width=32) (actual time=3.457..3.459 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=993 width=10) (actual time=0.059..2.505 rows=1062 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.049..0.296 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.021..0.029 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.024..0.161 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102217 on partsupp_102217 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.003..0.004 rows=3 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.022 ms
+                                     Execution Time: 3.533 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.08..196.09 rows=1 width=32) (actual time=3.415..3.419 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.60 rows=997 width=10) (actual time=0.053..2.420 rows=962 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.043..0.293 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.027 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.021..0.158 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102215 on partsupp_102215 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.003..0.004 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.958 ms
+                                     Execution Time: 3.502 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.62..196.63 rows=1 width=32) (actual time=3.370..3.373 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..189.40 rows=963 width=10) (actual time=0.054..2.461 rows=983 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.044..0.308 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.019..0.028 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.022..0.175 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102227 on partsupp_102227 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.003..0.004 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 1.157 ms
+                                     Execution Time: 3.438 ms
+                           ->  Task
+                                 Tuple data received from node: 16 bytes
+                                 Node: host=192.168.1.19 port=5432 dbname=tpch
+                                 ->  Aggregate  (cost=196.28..196.29 rows=1 width=32) (actual time=3.361..3.364 rows=1 loops=1)
+                                       ->  Nested Loop  (cost=0.57..188.76 rows=1003 width=10) (actual time=0.071..2.465 rows=980 loops=1)
+                                             ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.061..0.320 rows=396 loops=1)
+                                                   ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.035..0.043 rows=1 loops=1)
+                                                         Filter: (n_name = 'GERMANY'::bpchar)
+                                                         Rows Removed by Filter: 24
+                                                   ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.023..0.161 rows=396 loops=1)
+                                                         Index Cond: (s_nationkey = nation.n_nationkey)
+                                                         Heap Fetches: 0
+                                             ->  Index Only Scan using q11i1_102205 on partsupp_102205 partsupp  (cost=0.29..0.39 rows=3 width=14) (actual time=0.003..0.004 rows=2 loops=396)
+                                                   Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                                   Heap Fetches: 0
+                                     Planning Time: 0.902 ms
+                                     Execution Time: 3.430 ms
+               Planning Time: 0.000 ms
+               Execution Time: 115.790 ms
+         Task Count: 32
+         Tuple data received from nodes: 18 kB
+         Tasks Shown: All
+         ->  Task
+               Tuple data received from node: 568 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.55..213.48 rows=332 width=36) (actual time=15.303..16.204 rows=32 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 928
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.322..0.325 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=995 width=14) (actual time=0.133..4.692 rows=1023 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.089..0.589 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.024..0.045 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.061..0.358 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102214 on partsupp_102214 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.006..0.008 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 3.649 ms
+                   Execution Time: 16.805 ms
+         ->  Task
+               Tuple data received from node: 606 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.56..213.50 rows=332 width=36) (actual time=13.807..15.332 rows=34 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 859
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.353..0.356 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=996 width=14) (actual time=0.146..9.351 rows=946 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.100..0.561 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.024..0.040 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.073..0.342 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102229 on partsupp_102229 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.008 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 8.447 ms
+                   Execution Time: 15.939 ms
+         ->  Task
+               Tuple data received from node: 572 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.75..213.74 rows=333 width=36) (actual time=12.213..13.146 rows=32 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 888
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.336..0.337 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=999 width=14) (actual time=0.132..4.291 rows=972 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.089..0.553 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.025..0.037 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.060..0.351 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102234 on partsupp_102234 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.006..0.007 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 5.720 ms
+                   Execution Time: 13.750 ms
+         ->  Task
+               Tuple data received from node: 520 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.03..214.20 rows=337 width=36) (actual time=11.402..13.055 rows=29 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 940
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.327..0.329 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.92 rows=1011 width=14) (actual time=0.185..4.946 rows=1034 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.111..0.567 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.026..0.038 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.080..0.350 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102231 on partsupp_102231 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.009 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 8.477 ms
+                   Execution Time: 13.602 ms
+         ->  Task
+               Tuple data received from node: 698 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.59..213.58 rows=333 width=36) (actual time=10.695..12.543 rows=39 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 876
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.436..0.438 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=999 width=14) (actual time=0.153..5.492 rows=980 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.106..0.629 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.032..0.051 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.067..0.374 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102204 on partsupp_102204 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.008..0.010 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.917 ms
+                   Execution Time: 13.323 ms
+         ->  Task
+               Tuple data received from node: 556 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.35..213.22 rows=330 width=36) (actual time=10.726..12.550 rows=31 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 893
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.426..0.430 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.44 rows=991 width=14) (actual time=0.164..5.655 rows=974 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.119..0.663 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.028..0.045 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.086..0.408 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102232 on partsupp_102232 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.008..0.010 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.793 ms
+                   Execution Time: 13.240 ms
+         ->  Task
+               Tuple data received from node: 664 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.77..213.79 rows=334 width=36) (actual time=10.501..12.302 rows=37 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 898
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.351..0.353 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1001 width=14) (actual time=0.167..5.457 rows=1005 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.101..0.629 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.027..0.043 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.071..0.375 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102212 on partsupp_102212 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.008..0.010 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.576 ms
+                   Execution Time: 12.933 ms
+         ->  Task
+               Tuple data received from node: 612 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.01..214.15 rows=336 width=36) (actual time=9.696..11.387 rows=34 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 922
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.353..0.356 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.92 rows=1009 width=14) (actual time=0.170..4.982 rows=1006 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.105..0.591 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.027..0.045 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.073..0.359 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102211 on partsupp_102211 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.009 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.414 ms
+                   Execution Time: 12.023 ms
+         ->  Task
+               Tuple data received from node: 486 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.03..213.48 rows=321 width=36) (actual time=10.729..11.650 rows=27 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 912
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.116..0.118 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..189.40 rows=963 width=14) (actual time=0.088..5.777 rows=983 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.068..0.659 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.026..0.036 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.038..0.376 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102227 on partsupp_102227 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.008..0.010 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.295 ms
+                   Execution Time: 11.944 ms
+         ->  Task
+               Tuple data received from node: 558 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.54..213.45 rows=331 width=36) (actual time=9.478..11.182 rows=31 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 898
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.348..0.351 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=994 width=14) (actual time=0.177..4.944 rows=985 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.108..0.620 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.028..0.044 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.075..0.379 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102203 on partsupp_102203 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.008 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.427 ms
+                   Execution Time: 11.863 ms
+         ->  Task
+               Tuple data received from node: 700 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.76..213.76 rows=333 width=36) (actual time=9.324..10.925 rows=39 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 881
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.314..0.316 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1000 width=14) (actual time=0.154..4.831 rows=983 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.097..0.555 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.021..0.037 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.073..0.345 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102213 on partsupp_102213 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.008 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.289 ms
+                   Execution Time: 11.490 ms
+         ->  Task
+               Tuple data received from node: 482 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.99..214.10 rows=336 width=36) (actual time=9.661..11.170 rows=27 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 866
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.135..0.137 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.92 rows=1007 width=14) (actual time=0.088..5.232 rows=956 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.070..0.525 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.029..0.045 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.036..0.305 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102219 on partsupp_102219 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.009 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.882 ms
+                   Execution Time: 11.458 ms
+         ->  Task
+               Tuple data received from node: 520 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.79..213.84 rows=334 width=36) (actual time=8.838..10.409 rows=29 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 884
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.156..0.159 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1003 width=14) (actual time=0.091..4.830 rows=980 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.060..0.509 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.019..0.034 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.038..0.295 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102205 on partsupp_102205 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.009 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.882 ms
+                   Execution Time: 10.645 ms
+         ->  Task
+               Tuple data received from node: 576 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.50..214.89 rows=342 width=36) (actual time=8.734..10.401 rows=32 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 887
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.172..0.175 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..189.24 rows=1026 width=14) (actual time=0.080..4.739 rows=964 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.062..0.603 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.022..0.042 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.036..0.359 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102206 on partsupp_102206 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.008 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.443 ms
+                   Execution Time: 10.597 ms
+         ->  Task
+               Tuple data received from node: 626 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.83..213.94 rows=336 width=36) (actual time=8.754..10.142 rows=35 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 906
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.169..0.171 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1007 width=14) (actual time=0.087..4.642 rows=989 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.065..0.517 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.028..0.042 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.033..0.281 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102225 on partsupp_102225 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.007..0.008 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.614 ms
+                   Execution Time: 10.430 ms
+         ->  Task
+               Tuple data received from node: 498 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.34..213.19 rows=330 width=36) (actual time=8.710..9.912 rows=28 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 925
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.140..0.142 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.44 rows=990 width=14) (actual time=0.078..4.572 rows=1020 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.063..0.502 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.025..0.036 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.034..0.286 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102220 on partsupp_102220 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.006..0.008 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 2.253 ms
+                   Execution Time: 10.202 ms
+         ->  Task
+               Tuple data received from node: 700 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.76..213.76 rows=333 width=36) (actual time=7.557..9.438 rows=39 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 905
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.143..0.145 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1000 width=14) (actual time=0.082..4.424 rows=999 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.065..0.479 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.026..0.043 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.034..0.260 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102208 on partsupp_102208 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.006..0.008 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.331 ms
+                   Execution Time: 9.645 ms
+         ->  Task
+               Tuple data received from node: 714 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.82..213.91 rows=335 width=36) (actual time=7.748..9.304 rows=40 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 873
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.109..0.110 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1006 width=14) (actual time=0.068..4.570 rows=962 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.054..0.514 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.037 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.028..0.299 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102207 on partsupp_102207 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.006..0.008 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.914 ms
+                   Execution Time: 9.478 ms
+         ->  Task
+               Tuple data received from node: 504 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.75..213.74 rows=333 width=36) (actual time=7.636..8.584 rows=28 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 919
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.136..0.138 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=999 width=14) (actual time=0.076..4.171 rows=1011 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.061..0.476 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.026..0.037 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.032..0.270 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102226 on partsupp_102226 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.006..0.007 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.995 ms
+                   Execution Time: 8.833 ms
+         ->  Task
+               Tuple data received from node: 678 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.55..213.48 rows=332 width=36) (actual time=6.606..7.628 rows=38 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 868
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=1.411..1.413 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=995 width=14) (actual time=0.169..2.868 rows=966 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.104..0.391 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.033 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.075..0.238 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102233 on partsupp_102233 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 8.443 ms
+                   Execution Time: 8.158 ms
+         ->  Task
+               Tuple data received from node: 594 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.31..213.12 rows=329 width=36) (actual time=6.191..7.062 rows=33 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 917
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.149..0.151 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.44 rows=987 width=14) (actual time=0.059..3.189 rows=1003 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.049..0.402 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.021..0.031 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.024..0.220 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102221 on partsupp_102221 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.312 ms
+                   Execution Time: 7.292 ms
+         ->  Task
+               Tuple data received from node: 772 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.03..214.20 rows=337 width=36) (actual time=5.606..6.548 rows=43 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 883
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.148..0.150 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.92 rows=1011 width=14) (actual time=0.062..3.134 rows=982 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.051..0.352 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.020..0.032 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.190 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102218 on partsupp_102218 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.006 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.428 ms
+                   Execution Time: 6.688 ms
+         ->  Task
+               Tuple data received from node: 590 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.76..213.76 rows=333 width=36) (actual time=5.442..6.412 rows=33 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 933
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.126..0.128 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1000 width=14) (actual time=0.073..3.213 rows=1023 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.062..0.389 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.030..0.040 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.192 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102222 on partsupp_102222 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.006 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.432 ms
+                   Execution Time: 6.575 ms
+         ->  Task
+               Tuple data received from node: 694 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.25..214.51 rows=339 width=36) (actual time=5.187..6.145 rows=39 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 943
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.109..0.111 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..189.08 rows=1017 width=14) (actual time=0.064..2.970 rows=1045 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.053..0.370 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.022..0.032 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.207 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102228 on partsupp_102228 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.348 ms
+                   Execution Time: 6.273 ms
+         ->  Task
+               Tuple data received from node: 304 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.00..214.12 rows=336 width=36) (actual time=4.822..5.750 rows=17 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 915
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.125..0.126 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.92 rows=1008 width=14) (actual time=0.065..2.851 rows=990 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.053..0.340 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.033 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.026..0.181 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102230 on partsupp_102230 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.338 ms
+                   Execution Time: 5.879 ms
+         ->  Task
+               Tuple data received from node: 512 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.79..213.84 rows=334 width=36) (actual time=4.787..5.692 rows=29 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 894
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.139..0.141 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=1003 width=14) (actual time=0.066..2.824 rows=975 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.054..0.338 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.033 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.183 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102216 on partsupp_102216 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.410 ms
+                   Execution Time: 5.820 ms
+         ->  Task
+               Tuple data received from node: 480 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=199.00..214.12 rows=336 width=36) (actual time=4.750..5.618 rows=27 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 873
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.127..0.129 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.92 rows=1008 width=14) (actual time=0.066..2.808 rows=954 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.054..0.341 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.033 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.028..0.183 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102224 on partsupp_102224 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.358 ms
+                   Execution Time: 5.790 ms
+         ->  Task
+               Tuple data received from node: 504 bytes
+               Node: host=192.168.1.58 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.55..213.48 rows=332 width=36) (actual time=4.640..5.510 rows=28 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 839
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.126..0.127 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=995 width=14) (actual time=0.066..2.794 rows=925 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.055..0.342 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.023..0.033 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.027..0.183 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102210 on partsupp_102210 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.405 ms
+                   Execution Time: 5.638 ms
+         ->  Task
+               Tuple data received from node: 712 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.53..213.43 rows=331 width=36) (actual time=4.534..5.392 rows=40 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 948
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.112..0.113 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=993 width=14) (actual time=0.060..2.572 rows=1062 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.050..0.311 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.022..0.030 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.024..0.166 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102217 on partsupp_102217 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.004 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.295 ms
+                   Execution Time: 5.512 ms
+         ->  Task
+               Tuple data received from node: 590 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.75..213.74 rows=333 width=36) (actual time=4.487..5.313 rows=33 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 927
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.129..0.131 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.76 rows=999 width=14) (actual time=0.058..2.647 rows=1023 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.048..0.314 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.021..0.029 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.024..0.167 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102223 on partsupp_102223 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.235 ms
+                   Execution Time: 5.429 ms
+         ->  Task
+               Tuple data received from node: 608 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.51..213.38 rows=330 width=36) (actual time=4.472..5.315 rows=34 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 897
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.110..0.111 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=991 width=14) (actual time=0.058..2.610 rows=998 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.048..0.310 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.020..0.029 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.025..0.167 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102209 on partsupp_102209 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.005 rows=3 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.163 ms
+                   Execution Time: 5.428 ms
+         ->  Task
+               Tuple data received from node: 558 bytes
+               Node: host=192.168.1.19 port=5432 dbname=tpch
+               ->  HashAggregate  (cost=198.57..213.53 rows=332 width=36) (actual time=4.278..5.086 rows=31 loops=1)
+                     Group Key: partsupp.ps_partkey
+                     Filter: (sum((partsupp.ps_supplycost * (partsupp.ps_availqty)::numeric)) > $0)
+                     Batches: 1  Memory Usage: 577kB
+                     Rows Removed by Filter: 873
+                     InitPlan 1 (returns $0)
+                       ->  Function Scan on read_intermediate_result intermediate_result  (cost=0.00..0.01 rows=1 width=32) (actual time=0.102..0.103 rows=1 loops=1)
+                     ->  Nested Loop  (cost=0.57..188.60 rows=997 width=14) (actual time=0.055..2.559 rows=962 loops=1)
+                           ->  Nested Loop  (cost=0.29..20.60 rows=400 width=4) (actual time=0.044..0.302 rows=396 loops=1)
+                                 ->  Seq Scan on nation_102008 nation  (cost=0.00..1.31 rows=1 width=4) (actual time=0.018..0.027 rows=1 loops=1)
+                                       Filter: (n_name = 'GERMANY'::bpchar)
+                                       Rows Removed by Filter: 24
+                                 ->  Index Only Scan using q02i4_102010 on supplier_102010 supplier  (cost=0.29..15.29 rows=400 width=8) (actual time=0.023..0.163 rows=396 loops=1)
+                                       Index Cond: (s_nationkey = nation.n_nationkey)
+                                       Heap Fetches: 0
+                           ->  Index Only Scan using q11i1_102215 on partsupp_102215 partsupp  (cost=0.29..0.39 rows=3 width=18) (actual time=0.004..0.004 rows=2 loops=396)
+                                 Index Cond: (ps_suppkey = supplier.s_suppkey)
+                                 Heap Fetches: 0
+                   Planning Time: 1.168 ms
+                   Execution Time: 5.189 ms
+ Planning Time: 7.884 ms
+ Execution Time: 355.632 ms
+(1300 rows)
+

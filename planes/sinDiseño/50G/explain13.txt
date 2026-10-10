@@ -1,0 +1,1065 @@
+SET
+                                                                                                                  QUERY PLAN                                                                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=511.14..511.64 rows=200 width=16) (actual time=48617.377..48617.381 rows=46 loops=1)
+   Sort Key: (COALESCE((pg_catalog.sum(remote_scan.custdist))::bigint, '0'::bigint)) DESC, remote_scan.c_count DESC
+   Sort Method: quicksort  Memory: 26kB
+   ->  HashAggregate  (cost=500.00..503.50 rows=200 width=16) (actual time=48617.311..48617.330 rows=46 loops=1)
+         Group Key: remote_scan.c_count
+         Batches: 1  Memory Usage: 40kB
+         ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=16) (actual time=48616.921..48617.008 rows=1331 loops=1)
+               Task Count: 32
+               Tuple data received from nodes: 21 kB
+               Tasks Shown: All
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214406.51..214408.51 rows=200 width=16) (actual time=48337.493..48349.377 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151436.12..210886.64 rows=234658 width=12) (actual time=47551.916..48135.921 rows=234658 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151436.12..206193.48 rows=469316 width=12) (actual time=47551.884..47844.557 rows=234658 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150436.10..151022.74 rows=234658 width=12) (actual time=47549.779..47692.049 rows=234658 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=115618.36..125493.37 rows=234658 width=12) (actual time=44610.282..47023.706 rows=234658 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31776kB
+                                                   ->  Parallel Hash Right Join  (cost=6003.67..61413.67 rows=963639 width=8) (actual time=1498.478..38919.258 rows=2389835 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102112 orders_by_customer  (cost=0.00..52880.40 rows=963639 width=8) (actual time=16.668..31606.624 rows=2311151 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25426
+                                                         ->  Parallel Hash  (cost=4781.49..4781.49 rows=97774 width=4) (actual time=1473.873..1473.874 rows=234658 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102144 on customer_102144 customer  (cost=0.42..4781.49 rows=97774 width=4) (actual time=0.025..950.627 rows=234658 loops=1)
+                                                                     Heap Fetches: 125
+                         Planning Time: 48.907 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.285 ms, Inlining 0.000 ms, Optimization 1.384 ms, Emission 70.832 ms, Total 74.502 ms
+                         Execution Time: 48472.816 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214965.03..214967.03 rows=200 width=16) (actual time=48302.839..48305.452 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152009.40..211445.98 rows=234603 width=12) (actual time=47666.457..48141.626 rows=234603 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152009.40..206753.92 rows=469206 width=12) (actual time=47666.416..47848.182 rows=234603 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151009.38..151595.88 rows=234603 width=12) (actual time=47665.606..47781.881 rows=234603 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=116159.58..126071.95 rows=234603 width=12) (actual time=45184.864..47136.140 rows=234603 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31800kB
+                                                   ->  Parallel Hash Right Join  (cost=6005.89..61681.90 rows=968492 width=8) (actual time=1708.379..39102.899 rows=2400973 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102118 orders_by_customer  (cost=0.00..53133.68 rows=968492 width=8) (actual time=61.379..31675.060 rows=2322689 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25335
+                                                         ->  Parallel Hash  (cost=4784.00..4784.00 rows=97751 width=4) (actual time=1635.715..1635.716 rows=234603 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102150 on customer_102150 customer  (cost=0.42..4784.00 rows=97751 width=4) (actual time=0.031..1067.007 rows=234603 loops=1)
+                                                                     Heap Fetches: 299
+                         Planning Time: 70.916 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 14.332 ms, Inlining 0.000 ms, Optimization 1.295 ms, Emission 117.006 ms, Total 132.633 ms
+                         Execution Time: 48444.187 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214584.51..214586.51 rows=200 width=16) (actual time=48260.587..48264.384 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151506.51..211058.62 rows=235059 width=12) (actual time=47446.970..48086.679 rows=235059 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151506.51..206357.44 rows=470118 width=12) (actual time=47446.938..47780.081 rows=235059 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150506.49..151094.14 rows=235059 width=12) (actual time=47446.188..47691.217 rows=235059 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5992kB
+                                             ->  Partial HashAggregate  (cost=115674.82..125518.10 rows=235059 width=12) (actual time=44738.405..46952.613 rows=235059 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31832kB
+                                                   ->  Parallel Hash Right Join  (cost=6006.40..61727.47 rows=959064 width=8) (actual time=1642.498..38937.545 rows=2402717 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102122 orders_by_customer  (cost=0.00..53203.48 rows=959064 width=8) (actual time=7.964..31447.414 rows=2324406 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 24948
+                                                         ->  Parallel Hash  (cost=4782.14..4782.14 rows=97941 width=4) (actual time=1623.248..1623.249 rows=235059 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102154 on customer_102154 customer  (cost=0.42..4782.14 rows=97941 width=4) (actual time=0.031..1031.016 rows=235059 loops=1)
+                                                                     Heap Fetches: 11
+                         Planning Time: 65.060 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 19.169 ms, Inlining 0.000 ms, Optimization 1.312 ms, Emission 112.788 ms, Total 133.270 ms
+                         Execution Time: 48392.335 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215036.76..215038.76 rows=200 width=16) (actual time=48178.156..48182.129 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151848.74..211504.72 rows=235469 width=12) (actual time=47305.835..47950.848 rows=235469 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151848.74..206795.34 rows=470938 width=12) (actual time=47305.805..47624.416 rows=235469 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150848.72..151437.39 rows=235469 width=12) (actual time=47304.809..47502.279 rows=235469 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 6008kB
+                                             ->  Partial HashAggregate  (cost=115944.51..125813.79 rows=235469 width=12) (actual time=44547.034..46765.856 rows=235469 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31904kB
+                                                   ->  Parallel Hash Right Join  (cost=6011.30..61839.49 rows=961867 width=8) (actual time=1758.541..38791.612 rows=2408638 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102132 orders_by_customer  (cost=0.00..53303.24 rows=961867 width=8) (actual time=60.419..31437.721 rows=2330092 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25845
+                                                         ->  Parallel Hash  (cost=4784.90..4784.90 rows=98112 width=4) (actual time=1681.334..1681.334 rows=235469 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102164 on customer_102164 customer  (cost=0.42..4784.90 rows=98112 width=4) (actual time=0.028..1156.872 rows=235469 loops=1)
+                                                                     Heap Fetches: 71
+                         Planning Time: 74.846 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.305 ms, Inlining 0.000 ms, Optimization 7.392 ms, Emission 43.060 ms, Total 52.756 ms
+                         Execution Time: 48332.554 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214002.92..214004.92 rows=200 width=16) (actual time=48231.747..48235.581 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=150998.18..210481.13 rows=234786 width=12) (actual time=47493.609..48034.948 rows=234786 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=150998.18..205785.41 rows=469572 width=12) (actual time=47493.578..47700.210 rows=234786 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=149998.16..150585.12 rows=234786 width=12) (actual time=47492.622..47632.093 rows=234786 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=115227.35..125039.59 rows=234786 width=12) (actual time=44613.093..47000.201 rows=234786 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31768kB
+                                                   ->  Parallel Hash Right Join  (cost=6010.52..61483.85 rows=955440 width=8) (actual time=1677.952..38859.235 rows=2393417 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102124 orders_by_customer  (cost=0.00..52965.26 rows=955440 width=8) (actual time=62.474..31703.802 rows=2314725 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25433
+                                                         ->  Parallel Hash  (cost=4787.67..4787.67 rows=97828 width=4) (actual time=1603.059..1603.060 rows=234786 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102156 on customer_102156 customer  (cost=0.42..4787.67 rows=97828 width=4) (actual time=0.028..1109.623 rows=234786 loops=1)
+                                                                     Heap Fetches: 148
+                         Planning Time: 81.341 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.277 ms, Inlining 0.000 ms, Optimization 1.377 ms, Emission 97.570 ms, Total 101.224 ms
+                         Execution Time: 48326.057 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215018.08..215020.08 rows=200 width=16) (actual time=48148.059..48155.988 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151989.73..211494.97 rows=234874 width=12) (actual time=47281.848..47918.683 rows=234874 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151989.73..206797.49 rows=469748 width=12) (actual time=47281.816..47580.694 rows=234874 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150989.71..151576.89 rows=234874 width=12) (actual time=47280.886..47449.138 rows=234874 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5992kB
+                                             ->  Partial HashAggregate  (cost=116112.78..126022.65 rows=234874 width=12) (actual time=44384.130..46788.660 rows=234874 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31864kB
+                                                   ->  Parallel Hash Right Join  (cost=6006.77..61672.62 rows=967825 width=8) (actual time=1640.422..38563.181 rows=2399578 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102128 orders_by_customer  (cost=0.00..53125.27 rows=967825 width=8) (actual time=58.041..31192.745 rows=2321191 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25055
+                                                         ->  Parallel Hash  (cost=4783.47..4783.47 rows=97864 width=4) (actual time=1568.057..1568.058 rows=234874 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102160 on customer_102160 customer  (cost=0.42..4783.47 rows=97864 width=4) (actual time=0.028..1075.240 rows=234874 loops=1)
+                                                                     Heap Fetches: 102
+                         Planning Time: 80.002 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.374 ms, Inlining 0.000 ms, Optimization 1.340 ms, Emission 53.627 ms, Total 57.341 ms
+                         Execution Time: 48295.346 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214724.55..214726.55 rows=200 width=16) (actual time=48185.579..48195.354 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151774.02..211205.79 rows=234584 width=12) (actual time=47300.337..47957.779 rows=234584 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151774.02..206514.11 rows=469168 width=12) (actual time=47300.305..47561.689 rows=234584 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150774.00..151360.46 rows=234584 width=12) (actual time=47299.374..47463.308 rows=234584 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=115942.68..125838.40 rows=234584 width=12) (actual time=44535.793..46800.458 rows=234584 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31784kB
+                                                   ->  Parallel Hash Right Join  (cost=6003.63..61583.52 rows=966385 width=8) (actual time=1747.966..38734.776 rows=2395941 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102126 orders_by_customer  (cost=0.00..53043.08 rows=966385 width=8) (actual time=63.008..31493.595 rows=2317789 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25198
+                                                         ->  Parallel Hash  (cost=4781.85..4781.85 rows=97743 width=4) (actual time=1668.654..1668.656 rows=234584 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102158 on customer_102158 customer  (cost=0.42..4781.85 rows=97743 width=4) (actual time=0.026..1154.536 rows=234584 loops=1)
+                                                                     Heap Fetches: 136
+                         Planning Time: 85.775 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.196 ms, Inlining 0.000 ms, Optimization 1.374 ms, Emission 101.294 ms, Total 104.864 ms
+                         Execution Time: 48288.370 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=213788.89..213790.89 rows=200 width=16) (actual time=48117.229..48126.929 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=150893.91..210273.24 rows=234377 width=12) (actual time=47309.510..47946.018 rows=234377 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=150893.91..205585.70 rows=468754 width=12) (actual time=47309.473..47619.495 rows=234377 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=149893.89..150479.83 rows=234377 width=12) (actual time=47293.591..47494.353 rows=234377 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5976kB
+                                             ->  Partial HashAggregate  (cost=115178.41..124981.75 rows=234377 width=12) (actual time=44500.391..46764.741 rows=234377 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31800kB
+                                                   ->  Parallel Hash Right Join  (cost=6005.64..61469.50 rows=954825 width=8) (actual time=1445.627..38835.440 rows=2391843 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102134 orders_by_customer  (cost=0.00..52957.41 rows=954825 width=8) (actual time=33.135..31891.780 rows=2313514 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25508
+                                                         ->  Parallel Hash  (cost=4784.93..4784.93 rows=97657 width=4) (actual time=1410.168..1410.168 rows=234377 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102166 on customer_102166 customer  (cost=0.42..4784.93 rows=97657 width=4) (actual time=0.029..940.229 rows=234377 loops=1)
+                                                                     Heap Fetches: 4
+                         Planning Time: 82.275 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.287 ms, Inlining 0.000 ms, Optimization 11.758 ms, Emission 43.764 ms, Total 57.809 ms
+                         Execution Time: 48274.035 ms
+               ->  Task
+                     Tuple data received from node: 624 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215352.71..215354.71 rows=200 width=16) (actual time=48083.117..48092.716 rows=39 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152517.31..211840.39 rows=234155 width=12) (actual time=47190.346..47865.445 rows=234155 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152517.31..207157.29 rows=468310 width=12) (actual time=47190.313..47448.551 rows=234155 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151517.28..152102.67 rows=234155 width=12) (actual time=47189.427..47326.247 rows=234155 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5968kB
+                                             ->  Partial HashAggregate  (cost=116654.74..126630.05 rows=234155 width=12) (actual time=44449.133..46629.906 rows=234155 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31808kB
+                                                   ->  Parallel Hash Right Join  (cost=6007.46..61691.68 rows=977121 width=8) (actual time=1532.628..38628.999 rows=2397851 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102130 orders_by_customer  (cost=0.00..53119.24 rows=977121 width=8) (actual time=8.838..31391.502 rows=2319783 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25264
+                                                         ->  Parallel Hash  (cost=4787.89..4787.89 rows=97565 width=4) (actual time=1512.342..1512.343 rows=234155 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102162 on customer_102162 customer  (cost=0.42..4787.89 rows=97565 width=4) (actual time=0.030..995.436 rows=234155 loops=1)
+                                                                     Heap Fetches: 36
+                         Planning Time: 87.751 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 56.536 ms, Inlining 0.000 ms, Optimization 1.375 ms, Emission 49.610 ms, Total 107.522 ms
+                         Execution Time: 48262.850 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215109.28..215111.28 rows=200 width=16) (actual time=48114.243..48120.739 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152058.93..211584.94 rows=234956 width=12) (actual time=47366.760..47981.345 rows=234079 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152058.93..206885.82 rows=469912 width=12) (actual time=47366.727..47642.023 rows=234079 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151058.90..151646.29 rows=234956 width=12) (actual time=47365.794..47517.899 rows=234079 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5968kB
+                                             ->  Partial HashAggregate  (cost=116130.58..126080.44 rows=234956 width=12) (actual time=44488.886..46725.176 rows=234079 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31736kB
+                                                   ->  Parallel Hash Right Join  (cost=5980.93..61408.38 rows=972839 width=8) (actual time=1486.608..38598.077 rows=2388794 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102136 orders_by_customer  (cost=0.00..52873.71 rows=972839 width=8) (actual time=52.756..31484.618 rows=2310371 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 24994
+                                                         ->  Parallel Hash  (cost=4757.20..4757.20 rows=97898 width=4) (actual time=1431.627..1431.628 rows=234079 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102168 on customer_102168 customer  (cost=0.42..4757.20 rows=97898 width=4) (actual time=0.028..960.267 rows=234079 loops=1)
+                                                                     Heap Fetches: 193
+                         Planning Time: 141.748 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.161 ms, Inlining 0.000 ms, Optimization 10.372 ms, Emission 39.868 ms, Total 52.401 ms
+                         Execution Time: 48239.720 ms
+               ->  Task
+                     Tuple data received from node: 640 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215475.59..215477.59 rows=200 width=16) (actual time=48058.475..48068.380 rows=40 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152575.78..211959.67 rows=234395 width=12) (actual time=47242.177..47884.121 rows=234395 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152575.78..207271.77 rows=468790 width=12) (actual time=47242.145..47562.779 rows=234395 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151575.76..152161.75 rows=234395 width=12) (actual time=47241.240..47454.206 rows=234395 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5976kB
+                                             ->  Partial HashAggregate  (cost=116681.22..126661.89 rows=234395 width=12) (actual time=44461.280..46642.035 rows=234395 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31784kB
+                                                   ->  Parallel Hash Right Join  (cost=6006.88..61696.84 rows=977500 width=8) (actual time=1499.782..38580.517 rows=2399214 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102138 orders_by_customer  (cost=0.00..53123.98 rows=977500 width=8) (actual time=41.394..31182.537 rows=2320994 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25297
+                                                         ->  Parallel Hash  (cost=4786.07..4786.07 rows=97665 width=4) (actual time=1456.373..1456.374 rows=234395 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102170 on customer_102170 customer  (cost=0.42..4786.07 rows=97665 width=4) (actual time=0.028..975.132 rows=234395 loops=1)
+                                                                     Heap Fetches: 184
+                         Planning Time: 103.416 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.266 ms, Inlining 0.000 ms, Optimization 1.319 ms, Emission 43.906 ms, Total 47.491 ms
+                         Execution Time: 48194.154 ms
+               ->  Task
+                     Tuple data received from node: 640 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214148.05..214150.05 rows=200 width=16) (actual time=48057.448..48072.343 rows=40 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151174.98..210628.03 rows=234668 width=12) (actual time=47147.492..47925.736 rows=234668 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151174.98..205934.67 rows=469336 width=12) (actual time=47147.456..47480.161 rows=234668 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150174.95..150761.62 rows=234668 width=12) (actual time=47136.540..47378.055 rows=234668 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=115406.77..125231.26 rows=234668 width=12) (actual time=44138.574..46600.841 rows=234668 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31792kB
+                                                   ->  Parallel Hash Right Join  (cost=6002.81..61566.58 rows=957159 width=8) (actual time=1582.848..38256.062 rows=2397774 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102114 orders_by_customer  (cost=0.00..53051.18 rows=957159 width=8) (actual time=26.007..31318.671 rows=2319555 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25116
+                                                         ->  Parallel Hash  (cost=4780.59..4780.59 rows=97778 width=4) (actual time=1554.442..1554.443 rows=234668 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102146 on customer_102146 customer  (cost=0.42..4780.59 rows=97778 width=4) (actual time=0.030..991.259 rows=234668 loops=1)
+                                                                     Heap Fetches: 77
+                         Planning Time: 72.743 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.068 ms, Inlining 0.000 ms, Optimization 25.468 ms, Emission 129.103 ms, Total 156.640 ms
+                         Execution Time: 48190.631 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215783.75..215785.75 rows=200 width=16) (actual time=47858.919..47897.072 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152809.33..212263.65 rows=234673 width=12) (actual time=46492.588..47740.142 rows=234673 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152809.33..207570.19 rows=469346 width=12) (actual time=46492.555..47491.968 rows=539138 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 2
+                                       ->  Sort  (cost=151809.31..152395.99 rows=234673 width=12) (actual time=45944.392..45988.143 rows=179713 loops=3)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 3920kB
+                                             Worker 0:  Sort Method: external merge  Disk: 3928kB
+                                             Worker 1:  Sort Method: external merge  Disk: 5912kB
+                                             ->  Partial HashAggregate  (cost=116868.32..126865.14 rows=234673 width=12) (actual time=44419.799..45461.364 rows=179713 loops=3)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11112kB
+                                                   Worker 0:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11168kB
+                                                   Worker 1:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11552kB
+                                                   ->  Parallel Hash Right Join  (cost=6007.87..61787.70 rows=979211 width=8) (actual time=1331.561..41824.405 rows=800974 loops=3)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102110 orders_by_customer  (cost=0.00..53209.36 rows=979211 width=8) (actual time=52.333..38043.386 rows=774964 loops=3)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 8430
+                                                         ->  Parallel Hash  (cost=4785.62..4785.62 rows=97780 width=4) (actual time=1270.677..1270.678 rows=78224 loops=3)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102142 on customer_102142 customer  (cost=0.42..4785.62 rows=97780 width=4) (actual time=1.617..915.574 rows=78224 loops=3)
+                                                                     Heap Fetches: 123
+                         Planning Time: 47.120 ms
+                         JIT:
+                           Functions: 61
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 21.419 ms, Inlining 0.000 ms, Optimization 21.058 ms, Emission 338.659 ms, Total 381.136 ms
+                         Execution Time: 47971.911 ms
+               ->  Task
+                     Tuple data received from node: 704 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214384.73..214386.73 rows=200 width=16) (actual time=47820.501..47839.440 rows=44 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151549.32..210872.41 rows=234155 width=12) (actual time=46955.911..47665.438 rows=234155 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151549.32..206189.31 rows=468310 width=12) (actual time=46955.874..47274.283 rows=234155 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150549.30..151134.69 rows=234155 width=12) (actual time=46955.040..47150.673 rows=234155 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5968kB
+                                             ->  Partial HashAggregate  (cost=115781.36..125662.06 rows=234155 width=12) (actual time=44562.925..46526.356 rows=234155 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31760kB
+                                                   ->  Parallel Hash Right Join  (cost=6004.49..61499.43 rows=965012 width=8) (actual time=1314.319..38867.722 rows=2392562 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102120 orders_by_customer  (cost=0.00..52961.74 rows=965012 width=8) (actual time=0.841..31905.075 rows=2314453 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25218
+                                                         ->  Parallel Hash  (cost=4784.93..4784.93 rows=97565 width=4) (actual time=1311.143..1311.144 rows=234155 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102152 on customer_102152 customer  (cost=0.42..4784.93 rows=97565 width=4) (actual time=0.027..780.182 rows=234155 loops=1)
+                                                                     Heap Fetches: 14
+                         Planning Time: 142.646 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.125 ms, Inlining 0.000 ms, Optimization 1.355 ms, Emission 52.560 ms, Total 56.040 ms
+                         Execution Time: 47918.861 ms
+               ->  Task
+                     Tuple data received from node: 688 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=213786.10..213788.10 rows=200 width=16) (actual time=47803.694..47853.252 rows=43 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=150832.62..210267.18 rows=234595 width=12) (actual time=46458.229..47770.577 rows=234595 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=150832.62..205575.28 rows=469190 width=12) (actual time=46458.178..47570.408 rows=538653 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 2
+                                       ->  Sort  (cost=149832.60..150419.09 rows=234595 width=12) (actual time=45921.489..45956.263 rows=179551 loops=3)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 3912kB
+                                             Worker 0:  Sort Method: external merge  Disk: 5912kB
+                                             Worker 1:  Sort Method: external merge  Disk: 3920kB
+                                             ->  Partial HashAggregate  (cost=115130.48..124895.95 rows=234595 width=12) (actual time=44423.830..45435.491 rows=179551 loops=3)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11096kB
+                                                   Worker 0:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11584kB
+                                                   Worker 1:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11120kB
+                                                   ->  Parallel Hash Right Join  (cost=6006.76..61709.97 rows=949698 width=8) (actual time=1001.186..41885.899 rows=800998 loops=3)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102108 orders_by_customer  (cost=0.00..53210.20 rows=949698 width=8) (actual time=1.891..38534.402 rows=774935 loops=3)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 8506
+                                                         ->  Parallel Hash  (cost=4784.91..4784.91 rows=97748 width=4) (actual time=991.114..991.115 rows=78198 loops=3)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102140 on customer_102140 customer  (cost=0.42..4784.91 rows=97748 width=4) (actual time=0.055..725.942 rows=78198 loops=3)
+                                                                     Heap Fetches: 54
+                         Planning Time: 67.545 ms
+                         JIT:
+                           Functions: 61
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 43.306 ms, Inlining 0.000 ms, Optimization 4.568 ms, Emission 339.911 ms, Total 387.785 ms
+                         Execution Time: 47918.507 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214940.63..214942.63 rows=200 width=16) (actual time=47781.131..47826.390 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152183.58..211432.68 rows=233863 width=12) (actual time=46460.980..47741.399 rows=233863 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152183.58..206755.42 rows=467726 width=12) (actual time=46460.945..47562.825 rows=537121 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 2
+                                       ->  Sort  (cost=151183.55..151768.21 rows=233863 width=12) (actual time=45866.162..45903.165 rows=179040 loops=3)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 3904kB
+                                             Worker 0:  Sort Method: external merge  Disk: 5888kB
+                                             Worker 1:  Sort Method: external merge  Disk: 3904kB
+                                             ->  Partial HashAggregate  (cost=116374.71..126331.46 rows=233863 width=12) (actual time=44292.759..45355.071 rows=179040 loops=3)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11120kB
+                                                   Worker 0:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11568kB
+                                                   Worker 1:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11088kB
+                                                   ->  Parallel Hash Right Join  (cost=5998.26..61524.21 rows=975120 width=8) (actual time=1151.251..41753.898 rows=797644 loops=3)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102116 orders_by_customer  (cost=0.00..52966.21 rows=975120 width=8) (actual time=57.712..38227.615 rows=771703 loops=3)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 8415
+                                                         ->  Parallel Hash  (cost=4780.22..4780.22 rows=97443 width=4) (actual time=1082.946..1082.947 rows=77954 loops=3)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102148 on customer_102148 customer  (cost=0.42..4780.22 rows=97443 width=4) (actual time=0.048..834.874 rows=77954 loops=3)
+                                                                     Heap Fetches: 150
+                         Planning Time: 9.023 ms
+                         JIT:
+                           Functions: 61
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 7.676 ms, Inlining 0.000 ms, Optimization 5.120 ms, Emission 320.380 ms, Total 333.176 ms
+                         Execution Time: 47892.909 ms
+               ->  Task
+                     Tuple data received from node: 640 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214599.16..214601.16 rows=200 width=16) (actual time=24072.860..24078.838 rows=40 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151733.70..211085.15 rows=234267 width=12) (actual time=23654.679..24025.627 rows=234267 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151733.70..206399.81 rows=468534 width=12) (actual time=23654.641..23888.019 rows=538323 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 2
+                                       ->  Sort  (cost=150733.67..151319.34 rows=234267 width=12) (actual time=23326.025..23367.321 rows=179441 loops=3)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5896kB
+                                             Worker 0:  Sort Method: external merge  Disk: 3920kB
+                                             Worker 1:  Sort Method: external merge  Disk: 3920kB
+                                             ->  Partial HashAggregate  (cost=115942.79..125835.64 rows=234267 width=12) (actual time=21953.912..22902.524 rows=179441 loops=3)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11536kB
+                                                   Worker 0:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11136kB
+                                                   Worker 1:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11104kB
+                                                   ->  Parallel Hash Right Join  (cost=6001.04..61581.50 rows=966423 width=8) (actual time=407.455..21342.454 rows=798519 loops=3)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102109 orders_by_customer  (cost=0.00..53043.56 rows=966423 width=8) (actual time=1.667..20309.472 rows=772576 loops=3)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 8413
+                                                         ->  Parallel Hash  (cost=4780.90..4780.90 rows=97611 width=4) (actual time=401.867..401.868 rows=78089 loops=3)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102141 on customer_102141 customer  (cost=0.42..4780.90 rows=97611 width=4) (actual time=0.728..188.515 rows=78089 loops=3)
+                                                                     Heap Fetches: 50
+                         Planning Time: 8.342 ms
+                         JIT:
+                           Functions: 61
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 14.618 ms, Inlining 0.000 ms, Optimization 3.450 ms, Emission 257.285 ms, Total 275.353 ms
+                         Execution Time: 24130.384 ms
+               ->  Task
+                     Tuple data received from node: 704 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214503.22..214505.22 rows=200 width=16) (actual time=23968.860..23978.265 rows=44 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151424.42..210977.29 rows=235062 width=12) (actual time=23566.931..23921.722 rows=235062 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151424.42..206276.05 rows=470124 width=12) (actual time=23566.895..23784.441 rows=540475 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 2
+                                       ->  Sort  (cost=150424.39..151012.05 rows=235062 width=12) (actual time=23385.332..23426.323 rows=180158 loops=3)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5928kB
+                                             Worker 0:  Sort Method: external merge  Disk: 3928kB
+                                             Worker 1:  Sort Method: external merge  Disk: 3928kB
+                                             ->  Partial HashAggregate  (cost=115632.06..125435.71 rows=235062 width=12) (actual time=22212.142..23014.124 rows=180158 loops=3)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11664kB
+                                                   Worker 0:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11072kB
+                                                   Worker 1:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11120kB
+                                                   ->  Parallel Hash Right Join  (cost=6008.47..61970.24 rows=953988 width=8) (actual time=416.826..21586.563 rows=804481 loops=3)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102111 orders_by_customer  (cost=0.00..53457.50 rows=953988 width=8) (actual time=6.627..20545.947 rows=778517 loops=3)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 8544
+                                                         ->  Parallel Hash  (cost=4784.20..4784.20 rows=97942 width=4) (actual time=408.433..408.434 rows=78354 loops=3)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102143 on customer_102143 customer  (cost=0.42..4784.20 rows=97942 width=4) (actual time=0.052..259.355 rows=78354 loops=3)
+                                                                     Heap Fetches: 198
+                         Planning Time: 9.135 ms
+                         JIT:
+                           Functions: 61
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 29.025 ms, Inlining 0.000 ms, Optimization 3.983 ms, Emission 269.630 ms, Total 302.638 ms
+                         Execution Time: 24035.622 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=213968.51..213970.51 rows=200 width=16) (actual time=23948.705..23963.696 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151112.17..210455.01 rows=234233 width=12) (actual time=23528.850..23899.855 rows=233649 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151112.17..205770.35 rows=468466 width=12) (actual time=23528.817..23745.415 rows=535905 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 2
+                                       ->  Sort  (cost=150112.14..150697.73 rows=234233 width=12) (actual time=22997.319..23039.944 rows=178635 loops=3)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 3896kB
+                                             Worker 0:  Sort Method: external merge  Disk: 3888kB
+                                             Worker 1:  Sort Method: external merge  Disk: 5888kB
+                                             ->  Partial HashAggregate  (cost=115363.43..125217.39 rows=234233 width=12) (actual time=21475.056..22491.466 rows=178635 loops=3)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11056kB
+                                                   Worker 0:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11072kB
+                                                   Worker 1:  Batches: 5  Memory Usage: 8241kB  Disk Usage: 11552kB
+                                                   ->  Parallel Hash Right Join  (cost=5966.54..61279.73 rows=961488 width=8) (actual time=152.205..20912.884 rows=794892 loops=3)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102107 orders_by_customer  (cost=0.00..52789.24 rows=961488 width=8) (actual time=3.600..20164.436 rows=768823 loops=3)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 8311
+                                                         ->  Parallel Hash  (cost=4746.58..4746.58 rows=97597 width=4) (actual time=146.973..146.974 rows=77883 loops=3)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102139 on customer_102139 customer  (cost=0.42..4746.58 rows=97597 width=4) (actual time=0.051..69.959 rows=77883 loops=3)
+                                                                     Heap Fetches: 5
+                         Planning Time: 5.004 ms
+                         JIT:
+                           Functions: 61
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 5.005 ms, Inlining 0.000 ms, Optimization 3.157 ms, Emission 95.788 ms, Total 103.950 ms
+                         Execution Time: 23991.098 ms
+               ->  Task
+                     Tuple data received from node: 704 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=213746.41..213748.41 rows=200 width=16) (actual time=23296.264..23299.742 rows=44 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=150926.57..210234.96 rows=234097 width=12) (actual time=22496.042..23159.559 rows=234097 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=150926.57..205553.02 rows=468194 width=12) (actual time=22496.006..22764.134 rows=234097 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=149926.55..150511.79 rows=234097 width=12) (actual time=22483.866..22644.053 rows=234097 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5968kB
+                                             ->  Partial HashAggregate  (cost=115237.48..125044.90 rows=234097 width=12) (actual time=19161.086..21826.705 rows=234097 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31760kB
+                                                   ->  Parallel Hash Right Join  (cost=6001.60..61479.02 rows=955706 width=8) (actual time=715.934..17802.730 rows=2393743 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102127 orders_by_customer  (cost=0.00..52968.65 rows=955706 width=8) (actual time=28.728..15561.689 rows=2315710 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25350
+                                                         ->  Parallel Hash  (cost=4782.35..4782.35 rows=97540 width=4) (actual time=684.909..684.910 rows=234097 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102159 on customer_102159 customer  (cost=0.42..4782.35 rows=97540 width=4) (actual time=0.025..350.066 rows=234097 loops=1)
+                                                                     Heap Fetches: 27
+                         Planning Time: 19.347 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.836 ms, Inlining 0.000 ms, Optimization 13.100 ms, Emission 55.739 ms, Total 70.675 ms
+                         Execution Time: 23454.113 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214594.67..214596.67 rows=200 width=16) (actual time=23278.205..23282.529 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151715.79..211079.92 rows=234317 width=12) (actual time=22420.653..23121.294 rows=234317 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151715.79..206393.58 rows=468634 width=12) (actual time=22420.612..22709.081 rows=234317 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150715.77..151301.56 rows=234317 width=12) (actual time=22419.783..22584.327 rows=234317 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5976kB
+                                             ->  Partial HashAggregate  (cost=115919.66..125809.41 rows=234317 width=12) (actual time=19012.010..21757.033 rows=234317 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31752kB
+                                                   ->  Parallel Hash Right Join  (cost=6010.79..61584.24 rows=965963 width=8) (actual time=740.036..17576.287 rows=2394751 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102129 orders_by_customer  (cost=0.00..53037.75 rows=965963 width=8) (actual time=10.430..15359.176 rows=2316403 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25288
+                                                         ->  Parallel Hash  (cost=4790.39..4790.39 rows=97632 width=4) (actual time=715.201..715.202 rows=234317 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102161 on customer_102161 customer  (cost=0.42..4790.39 rows=97632 width=4) (actual time=0.035..404.881 rows=234317 loops=1)
+                                                                     Heap Fetches: 87
+                         Planning Time: 20.199 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.780 ms, Inlining 0.000 ms, Optimization 0.976 ms, Emission 83.513 ms, Total 86.269 ms
+                         Execution Time: 23427.274 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215273.68..215275.68 rows=200 width=16) (actual time=23255.353..23262.101 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152100.42..211742.47 rows=235414 width=12) (actual time=22109.767..22966.774 rows=235414 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152100.42..207034.19 rows=470828 width=12) (actual time=22109.733..22483.100 rows=235414 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151100.40..151688.93 rows=235414 width=12) (actual time=22097.776..22323.360 rows=235414 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 6000kB
+                                             ->  Partial HashAggregate  (cost=116188.64..126070.77 rows=235414 width=12) (actual time=18863.649..21498.323 rows=235414 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31912kB
+                                                   ->  Parallel Hash Right Join  (cost=6004.51..61987.10 rows=963583 width=8) (actual time=741.757..17518.887 rows=2412960 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102119 orders_by_customer  (cost=0.00..53453.14 rows=963583 width=8) (actual time=10.823..15323.735 rows=2334916 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25452
+                                                         ->  Parallel Hash  (cost=4778.40..4778.40 rows=98089 width=4) (actual time=728.580..728.581 rows=235414 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102151 on customer_102151 customer  (cost=0.42..4778.40 rows=98089 width=4) (actual time=0.028..346.498 rows=235414 loops=1)
+                                                                     Heap Fetches: 79
+                         Planning Time: 11.829 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.859 ms, Inlining 0.000 ms, Optimization 13.100 ms, Emission 90.008 ms, Total 104.967 ms
+                         Execution Time: 23415.325 ms
+               ->  Task
+                     Tuple data received from node: 688 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214914.47..214916.47 rows=200 width=16) (actual time=23224.786..23234.836 rows=43 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151958.31..211395.40 rows=234605 width=12) (actual time=21952.221..23013.221 rows=234605 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151958.31..206703.30 rows=469210 width=12) (actual time=21952.187..22553.898 rows=234605 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150958.29..151544.80 rows=234605 width=12) (actual time=21939.176..22283.401 rows=234605 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=116113.13..126020.67 rows=234605 width=12) (actual time=18781.937..21358.430 rows=234605 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31832kB
+                                                   ->  Parallel Hash Right Join  (cost=6003.92..61670.45 rows=967870 width=8) (actual time=779.885..17477.018 rows=2399183 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102125 orders_by_customer  (cost=0.00..53125.82 rows=967870 width=8) (actual time=25.131..15310.994 rows=2321060 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25504
+                                                         ->  Parallel Hash  (cost=4782.02..4782.02 rows=97752 width=4) (actual time=752.374..752.375 rows=234605 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102157 on customer_102157 customer  (cost=0.42..4782.02 rows=97752 width=4) (actual time=0.031..324.587 rows=234605 loops=1)
+                                                                     Heap Fetches: 95
+                         Planning Time: 10.667 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 8.896 ms, Inlining 0.000 ms, Optimization 13.029 ms, Emission 93.813 ms, Total 115.737 ms
+                         Execution Time: 23375.784 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=213897.11..213899.11 rows=200 width=16) (actual time=23172.967..23185.495 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=151413.51..210404.45 rows=232844 width=12) (actual time=21968.239..22900.339 rows=232844 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=151413.51..205747.57 rows=465688 width=12) (actual time=21968.211..22327.679 rows=232844 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=150413.49..150995.60 rows=232844 width=12) (actual time=21954.317..22214.120 rows=232844 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5936kB
+                                             ->  Partial HashAggregate  (cost=115769.36..125677.10 rows=232844 width=12) (actual time=18508.702..21320.108 rows=232844 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31728kB
+                                                   ->  Parallel Hash Right Join  (cost=5939.58..61198.37 rows=970151 width=8) (actual time=776.859..17293.489 rows=2381081 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102117 orders_by_customer  (cost=0.00..52712.10 rows=970151 width=8) (actual time=5.168..15159.109 rows=2303521 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25137
+                                                         ->  Parallel Hash  (cost=4726.85..4726.85 rows=97018 width=4) (actual time=755.070..755.071 rows=232844 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11168kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102149 on customer_102149 customer  (cost=0.42..4726.85 rows=97018 width=4) (actual time=0.028..383.225 rows=232844 loops=1)
+                                                                     Heap Fetches: 105
+                         Planning Time: 17.866 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.931 ms, Inlining 0.000 ms, Optimization 12.884 ms, Emission 109.109 ms, Total 123.923 ms
+                         Execution Time: 23349.065 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215306.24..215308.24 rows=200 width=16) (actual time=23180.688..23184.975 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152365.11..211788.01 rows=234549 width=12) (actual time=22145.848..22971.166 rows=234549 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152365.11..207097.03 rows=469098 width=12) (actual time=22145.813..22414.669 rows=234549 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151365.08..151951.46 rows=234549 width=12) (actual time=22131.886..22290.850 rows=234549 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=116497.47..126432.86 rows=234549 width=12) (actual time=19371.863..21428.638 rows=234549 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31888kB
+                                                   ->  Parallel Hash Right Join  (cost=6000.12..61850.14 rows=971508 width=8) (actual time=729.184..17876.740 rows=2407803 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102135 orders_by_customer  (cost=0.00..53299.77 rows=971508 width=8) (actual time=17.749..15622.833 rows=2330070 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25446
+                                                         ->  Parallel Hash  (cost=4778.51..4778.51 rows=97729 width=4) (actual time=699.863..699.864 rows=234549 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102167 on customer_102167 customer  (cost=0.42..4778.51 rows=97729 width=4) (actual time=0.025..380.218 rows=234549 loops=1)
+                                                                     Heap Fetches: 148
+                         Planning Time: 35.264 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 16.838 ms, Inlining 0.000 ms, Optimization 0.985 ms, Emission 55.588 ms, Total 73.411 ms
+                         Execution Time: 23318.893 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214028.49..214030.49 rows=200 width=16) (actual time=23025.003..23034.518 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=150986.72..210504.63 rows=234924 width=12) (actual time=21888.146..22773.681 rows=233922 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=150986.72..205806.15 rows=469848 width=12) (actual time=21888.110..22320.911 rows=233922 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=149986.69..150574.00 rows=234924 width=12) (actual time=21887.245..22146.450 rows=233922 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5968kB
+                                             ->  Partial HashAggregate  (cost=115197.66..125011.32 rows=234924 width=12) (actual time=18615.767..21354.724 rows=233922 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31816kB
+                                                   ->  Parallel Hash Right Join  (cost=5980.49..61453.88 rows=955445 width=8) (actual time=744.240..17338.814 rows=2393137 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102131 orders_by_customer  (cost=0.00..52965.31 rows=955445 width=8) (actual time=31.509..15286.290 rows=2315126 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25364
+                                                         ->  Parallel Hash  (cost=4756.93..4756.93 rows=97885 width=4) (actual time=699.417..699.418 rows=233922 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11200kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102163 on customer_102163 customer  (cost=0.42..4756.93 rows=97885 width=4) (actual time=0.026..367.002 rows=233922 loops=1)
+                                                                     Heap Fetches: 144
+                         Planning Time: 18.340 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.854 ms, Inlining 0.000 ms, Optimization 0.991 ms, Emission 75.989 ms, Total 78.833 ms
+                         Execution Time: 23190.662 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=216142.11..216144.11 rows=200 width=16) (actual time=22992.627..23005.546 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=153097.93..212618.12 rows=234933 width=12) (actual time=21761.873..22694.534 rows=234933 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=153097.93..207919.46 rows=469866 width=12) (actual time=21761.835..22243.675 rows=234933 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=152097.91..152685.24 rows=234933 width=12) (actual time=21752.909..22006.920 rows=234933 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5992kB
+                                             ->  Partial HashAggregate  (cost=117103.39..127121.66 rows=234933 width=12) (actual time=18695.491..21138.686 rows=234933 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31904kB
+                                                   ->  Parallel Hash Right Join  (cost=6006.63..61886.98 rows=981625 width=8) (actual time=630.174..17285.558 rows=2408393 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102133 orders_by_customer  (cost=0.00..53303.54 rows=981625 width=8) (actual time=11.194..15303.392 rows=2330411 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25539
+                                                         ->  Parallel Hash  (cost=4783.02..4783.02 rows=97889 width=4) (actual time=612.667..612.668 rows=234933 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11264kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102165 on customer_102165 customer  (cost=0.42..4783.02 rows=97889 width=4) (actual time=0.026..332.173 rows=234933 loops=1)
+                                                                     Heap Fetches: 38
+                         Planning Time: 22.608 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 5.320 ms, Inlining 0.000 ms, Optimization 9.017 ms, Emission 68.098 ms, Total 82.436 ms
+                         Execution Time: 23172.965 ms
+               ->  Task
+                     Tuple data received from node: 640 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=213307.35..213309.35 rows=200 width=16) (actual time=22937.650..22974.482 rows=40 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=150465.23..209794.65 rows=234180 width=12) (actual time=21675.028..22733.631 rows=234180 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=150465.23..205111.05 rows=468360 width=12) (actual time=21674.987..22084.810 rows=234180 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=149465.21..150050.66 rows=234180 width=12) (actual time=21674.075..21890.038 rows=234180 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5976kB
+                                             ->  Partial HashAggregate  (cost=114832.34..124575.56 rows=234180 width=12) (actual time=18585.765..21027.087 rows=234180 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31832kB
+                                                   ->  Parallel Hash Right Join  (cost=6002.84..61542.10 rows=947382 width=8) (actual time=729.719..17287.616 rows=2397328 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102123 orders_by_customer  (cost=0.00..53052.34 rows=947382 width=8) (actual time=6.533..15173.042 rows=2319454 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25338
+                                                         ->  Parallel Hash  (cost=4783.15..4783.15 rows=97575 width=4) (actual time=703.806..703.807 rows=234180 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102155 on customer_102155 customer  (cost=0.42..4783.15 rows=97575 width=4) (actual time=0.025..334.627 rows=234180 loops=1)
+                                                                     Heap Fetches: 269
+                         Planning Time: 17.615 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 19.016 ms, Inlining 0.000 ms, Optimization 0.994 ms, Emission 85.454 ms, Total 105.464 ms
+                         Execution Time: 23153.675 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215182.69..215184.69 rows=200 width=16) (actual time=22978.683..22991.571 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152223.31..211663.44 rows=234617 width=12) (actual time=21755.855..22668.242 rows=234617 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152223.31..206971.10 rows=469234 width=12) (actual time=21755.819..22117.580 rows=234617 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151223.28..151809.83 rows=234617 width=12) (actual time=21754.881..22015.006 rows=234617 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5984kB
+                                             ->  Partial HashAggregate  (cost=116325.87..126284.51 rows=234617 width=12) (actual time=18607.218..21150.030 rows=234617 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31808kB
+                                                   ->  Parallel Hash Right Join  (cost=6001.09..61516.10 rows=974396 width=8) (actual time=577.471..17203.342 rows=2391973 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102137 orders_by_customer  (cost=0.00..52957.17 rows=974396 width=8) (actual time=11.523..15234.596 rows=2313632 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 24942
+                                                         ->  Parallel Hash  (cost=4779.13..4779.13 rows=97757 width=4) (actual time=563.694..563.695 rows=234617 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102169 on customer_102169 customer  (cost=0.42..4779.13 rows=97757 width=4) (actual time=0.027..309.949 rows=234617 loops=1)
+                                                                     Heap Fetches: 32
+                         Planning Time: 13.377 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.815 ms, Inlining 0.000 ms, Optimization 0.945 ms, Emission 32.170 ms, Total 34.930 ms
+                         Execution Time: 23148.186 ms
+               ->  Task
+                     Tuple data received from node: 656 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=215344.56..215346.56 rows=200 width=16) (actual time=22941.188..22959.562 rows=41 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152281.87..211819.53 rows=235002 width=12) (actual time=21677.871..22661.790 rows=234041 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152281.87..207119.49 rows=470004 width=12) (actual time=21677.831..22080.214 rows=234041 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151281.84..151869.35 rows=235002 width=12) (actual time=21672.473..21904.494 rows=234041 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5968kB
+                                             ->  Partial HashAggregate  (cost=116333.59..126298.95 rows=235002 width=12) (actual time=18574.248..21039.010 rows=234041 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31768kB
+                                                   ->  Parallel Hash Right Join  (cost=5982.61..61503.17 rows=974763 width=8) (actual time=754.351..17322.087 rows=2392606 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102115 orders_by_customer  (cost=0.00..52961.76 rows=974763 width=8) (actual time=6.731..15235.576 rows=2314626 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25192
+                                                         ->  Parallel Hash  (cost=4758.64..4758.64 rows=97918 width=4) (actual time=742.038..742.039 rows=234041 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11232kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102147 on customer_102147 customer  (cost=0.42..4758.64 rows=97918 width=4) (actual time=0.027..346.932 rows=234041 loops=1)
+                                                                     Heap Fetches: 131
+                         Planning Time: 6.502 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.125 ms, Inlining 0.000 ms, Optimization 1.117 ms, Emission 92.396 ms, Total 95.638 ms
+                         Execution Time: 23063.171 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=214943.63..214945.63 rows=200 width=16) (actual time=22855.627..22870.082 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=152012.43..211425.95 rows=234512 width=12) (actual time=21585.963..22546.589 rows=233803 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=152012.43..206735.71 rows=469024 width=12) (actual time=21585.926..22092.098 rows=233803 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=151012.40..151598.68 rows=234512 width=12) (actual time=21572.893..21870.533 rows=233803 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5960kB
+                                             ->  Partial HashAggregate  (cost=116136.54..126083.75 rows=234512 width=12) (actual time=18512.201..20920.348 rows=233803 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31720kB
+                                                   ->  Parallel Hash Right Join  (cost=5970.55..61401.46 rows=973068 width=8) (actual time=803.459..17297.194 rows=2388066 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102121 orders_by_customer  (cost=0.00..52876.57 rows=973068 width=8) (actual time=23.338..15148.911 rows=2310021 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25346
+                                                         ->  Parallel Hash  (cost=4749.13..4749.13 rows=97713 width=4) (actual time=773.891..773.892 rows=233803 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11200kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102153 on customer_102153 customer  (cost=0.42..4749.13 rows=97713 width=4) (actual time=0.028..384.711 rows=233803 loops=1)
+                                                                     Heap Fetches: 182
+                         Planning Time: 7.873 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.147 ms, Inlining 0.000 ms, Optimization 10.224 ms, Emission 114.126 ms, Total 126.497 ms
+                         Execution Time: 23015.379 ms
+               ->  Task
+                     Tuple data received from node: 672 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  HashAggregate  (cost=212382.80..212384.80 rows=200 width=16) (actual time=22695.063..22710.461 rows=42 loops=1)
+                           Group Key: count(orders_by_customer.o_orderkey)
+                           Batches: 1  Memory Usage: 40kB
+                           ->  Finalize GroupAggregate  (cost=149935.97..208892.20 rows=232707 width=12) (actual time=21451.164..22432.383 rows=232707 loops=1)
+                                 Group Key: customer.c_custkey
+                                 ->  Gather Merge  (cost=149935.97..204238.06 rows=465414 width=12) (actual time=21451.124..21860.397 rows=232707 loops=1)
+                                       Workers Planned: 2
+                                       Workers Launched: 0
+                                       ->  Sort  (cost=148935.94..149517.71 rows=232707 width=12) (actual time=21450.271..21670.688 rows=232707 loops=1)
+                                             Sort Key: customer.c_custkey
+                                             Sort Method: external merge  Disk: 5936kB
+                                             ->  Partial HashAggregate  (cost=114468.43..124212.76 rows=232707 width=12) (actual time=18477.375..21036.084 rows=232707 loops=1)
+                                                   Group Key: customer.c_custkey
+                                                   Planned Partitions: 4  Batches: 5  Memory Usage: 8241kB  Disk Usage: 31696kB
+                                                   ->  Parallel Hash Right Join  (cost=5939.63..61064.18 rows=949409 width=8) (actual time=825.466..17219.988 rows=2377900 loops=1)
+                                                         Hash Cond: (orders_by_customer.o_custkey = customer.c_custkey)
+                                                         ->  Parallel Seq Scan on orders_by_customer_102113 orders_by_customer  (cost=0.00..52632.31 rows=949409 width=8) (actual time=80.661..15169.832 rows=2300251 loops=1)
+                                                               Filter: ((o_comment)::text !~~ '%special%requests%'::text)
+                                                               Rows Removed by Filter: 25140
+                                                         ->  Parallel Hash  (cost=4727.61..4727.61 rows=96961 width=4) (actual time=727.542..727.543 rows=232707 loops=1)
+                                                               Buckets: 262144  Batches: 1  Memory Usage: 11168kB
+                                                               ->  Parallel Index Only Scan using customer_pkey_102145 on customer_102145 customer  (cost=0.42..4727.61 rows=96961 width=4) (actual time=0.029..271.945 rows=232707 loops=1)
+                                                                     Heap Fetches: 66
+                         Planning Time: 6.442 ms
+                         JIT:
+                           Functions: 25
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 13.320 ms, Inlining 0.000 ms, Optimization 1.088 ms, Emission 118.444 ms, Total 132.853 ms
+                         Execution Time: 22858.726 ms
+ Planning Time: 4.542 ms
+ Execution Time: 48617.552 ms
+(1060 rows)
+

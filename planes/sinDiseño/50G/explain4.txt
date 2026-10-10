@@ -1,0 +1,893 @@
+SET
+                                                                                                QUERY PLAN                                                                                                 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=511.14..511.64 rows=200 width=72) (actual time=118157.246..118157.247 rows=5 loops=1)
+   Sort Key: remote_scan.o_orderpriority
+   Sort Method: quicksort  Memory: 25kB
+   ->  HashAggregate  (cost=500.00..503.50 rows=200 width=72) (actual time=118157.205..118157.208 rows=5 loops=1)
+         Group Key: remote_scan.o_orderpriority
+         Batches: 1  Memory Usage: 40kB
+         ->  Custom Scan (Citus Adaptive)  (cost=0.00..0.00 rows=100000 width=72) (actual time=118157.133..118157.146 rows=160 loops=1)
+               Task Count: 32
+               Tuple data received from nodes: 3680 bytes
+               Tasks Shown: All
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=112906.73..112953.68 rows=5 width=24) (actual time=117966.223..117980.879 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=112906.73..112953.58 rows=10 width=24) (actual time=117962.893..117980.779 rows=15 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=111906.71..111952.40 rows=5 width=24) (actual time=117882.762..117893.084 rows=5 loops=3)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=111906.71..111921.92 rows=6086 width=16) (actual time=117878.857..117883.660 rows=27348 loops=3)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 1426kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 1424kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 1379kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..111524.17 rows=6086 width=16) (actual time=58.333..117825.963 rows=27348 loops=3)
+                                                   ->  Parallel Seq Scan on orders_102080 orders  (cost=0.00..55488.45 rows=36959 width=20) (actual time=57.330..15418.837 rows=29797 loops=3)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 751547
+                                                   ->  Index Scan using lineitem_pkey_102016 on lineitem_102016 lineitem  (cost=0.43..8.10 rows=8 width=4) (actual time=3.433..3.433 rows=1 loops=89392)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.146 ms
+                         JIT:
+                           Functions: 42
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 13.332 ms, Inlining 0.000 ms, Optimization 2.487 ms, Emission 162.872 ms, Total 178.691 ms
+                         Execution Time: 118026.923 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113773.64..113823.65 rows=5 width=24) (actual time=117941.451..117953.453 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113773.64..113823.55 rows=10 width=24) (actual time=117936.771..117953.253 rows=15 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=112773.61..112822.37 rows=5 width=24) (actual time=117868.669..117882.982 rows=5 loops=3)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112773.61..112789.85 rows=6494 width=16) (actual time=117861.712..117869.438 rows=27555 loops=3)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 1395kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 1414kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 1433kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112362.38 rows=6494 width=16) (actual time=53.191..117799.096 rows=27555 loops=3)
+                                                   ->  Parallel Seq Scan on orders_102076 orders  (cost=0.00..55487.14 rows=37165 width=20) (actual time=52.150..15853.693 rows=30049 loops=3)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 751192
+                                                   ->  Index Scan using lineitem_pkey_102012 on lineitem_102012 lineitem  (cost=0.43..8.04 rows=8 width=4) (actual time=3.389..3.389 rows=1 loops=90146)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 3.819 ms
+                         JIT:
+                           Functions: 42
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 6.869 ms, Inlining 0.000 ms, Optimization 2.252 ms, Emission 147.308 ms, Total 156.429 ms
+                         Execution Time: 117991.190 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113751.90..113799.22 rows=5 width=24) (actual time=117916.636..117934.644 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113751.90..113799.12 rows=10 width=24) (actual time=117914.720..117934.571 rows=15 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=112751.87..112797.94 rows=5 width=24) (actual time=117823.433..117839.377 rows=5 loops=3)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112751.87..112767.21 rows=6136 width=16) (actual time=117817.224..117824.312 rows=27431 loops=3)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 1390kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 1427kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 1418kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112365.82 rows=6136 width=16) (actual time=65.406..117749.317 rows=27431 loops=3)
+                                                   ->  Parallel Seq Scan on orders_102078 orders  (cost=0.00..55491.19 rows=38908 width=20) (actual time=64.166..16988.805 rows=29895 loops=3)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 751491
+                                                   ->  Index Scan using lineitem_pkey_102014 on lineitem_102014 lineitem  (cost=0.43..7.82 rows=8 width=4) (actual time=3.367..3.367 rows=1 loops=89684)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.158 ms
+                         JIT:
+                           Functions: 42
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 13.153 ms, Inlining 0.000 ms, Optimization 13.110 ms, Emission 179.294 ms, Total 205.556 ms
+                         Execution Time: 117960.048 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=109595.88..109643.63 rows=5 width=24) (actual time=112276.023..112283.188 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=109595.88..109643.53 rows=10 width=24) (actual time=112272.772..112283.153 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=108595.86..108642.35 rows=5 width=24) (actual time=112271.547..112281.826 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=108595.86..108611.34 rows=6192 width=16) (actual time=112267.745..112272.371 rows=82081 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3972kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..108205.88 rows=6192 width=16) (actual time=44.152..112178.270 rows=82081 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102096 orders  (cost=0.00..55493.90 rows=37237 width=20) (actual time=39.811..2013.128 rows=89554 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2255041
+                                                   ->  Index Scan using lineitem_pkey_102032 on lineitem_102032 lineitem  (cost=0.43..7.36 rows=8 width=4) (actual time=1.228..1.228 rows=1 loops=89554)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 6.824 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 3.498 ms, Inlining 0.000 ms, Optimization 2.577 ms, Emission 33.999 ms, Total 40.073 ms
+                         Execution Time: 112384.412 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=114395.03..114444.57 rows=5 width=24) (actual time=111576.085..111585.567 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=114395.03..114444.47 rows=10 width=24) (actual time=111572.681..111585.530 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=113395.01..113443.29 rows=5 width=24) (actual time=111571.720..111584.467 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=113395.01..113411.09 rows=6431 width=16) (actual time=111567.914..111573.582 rows=81892 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3968kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112988.22 rows=6431 width=16) (actual time=68.292..111477.200 rows=81892 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102088 orders  (cost=0.00..55476.82 rows=37805 width=20) (actual time=65.340..1671.302 rows=89347 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2252723
+                                                   ->  Index Scan using lineitem_pkey_102024 on lineitem_102024 lineitem  (cost=0.43..8.05 rows=8 width=4) (actual time=1.227..1.227 rows=1 loops=89347)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 3.588 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 11.231 ms, Inlining 0.000 ms, Optimization 0.740 ms, Emission 55.271 ms, Total 67.242 ms
+                         Execution Time: 111695.246 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=114199.20..114249.47 rows=5 width=24) (actual time=111544.547..111550.771 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=114199.20..114249.37 rows=10 width=24) (actual time=111542.573..111550.748 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=113199.18..113248.19 rows=5 width=24) (actual time=111541.648..111549.716 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=113199.18..113215.50 rows=6528 width=16) (actual time=111539.692..111543.227 rows=82507 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3982kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112785.55 rows=6528 width=16) (actual time=32.065..111467.864 rows=82507 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102104 orders  (cost=0.00..55489.98 rows=38245 width=20) (actual time=25.180..1744.909 rows=89904 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254111
+                                                   ->  Index Scan using lineitem_pkey_102040 on lineitem_102040 lineitem  (cost=0.43..7.88 rows=8 width=4) (actual time=1.218..1.218 rows=1 loops=89904)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 10.246 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 3.013 ms, Inlining 0.000 ms, Optimization 1.023 ms, Emission 19.792 ms, Total 23.828 ms
+                         Execution Time: 111650.593 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113607.87..113657.65 rows=5 width=24) (actual time=111120.707..111128.776 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113607.87..113657.55 rows=10 width=24) (actual time=111118.029..111128.748 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=112607.85..112656.37 rows=5 width=24) (actual time=111109.700..111120.281 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112607.85..112624.01 rows=6463 width=16) (actual time=111107.092..111111.640 rows=82187 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3975kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112198.81 rows=6463 width=16) (actual time=78.958..111034.317 rows=82187 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102086 orders  (cost=0.00..55480.47 rows=36957 width=20) (actual time=71.205..1673.738 rows=89579 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2253087
+                                                   ->  Index Scan using lineitem_pkey_102022 on lineitem_102022 lineitem  (cost=0.43..8.06 rows=8 width=4) (actual time=1.219..1.219 rows=1 loops=89579)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 10.665 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 5.547 ms, Inlining 0.000 ms, Optimization 0.872 ms, Emission 67.098 ms, Total 73.517 ms
+                         Execution Time: 111231.455 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113302.31..113349.76 rows=5 width=24) (actual time=110952.046..110960.329 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113302.31..113349.66 rows=10 width=24) (actual time=110948.287..110960.295 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=112302.28..112348.48 rows=5 width=24) (actual time=110945.395..110957.291 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112302.28..112317.66 rows=6153 width=16) (actual time=110940.673..110946.336 rows=81936 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3969kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..111915.04 rows=6153 width=16) (actual time=36.739..110857.447 rows=81936 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102098 orders  (cost=0.00..55562.57 rows=37598 width=20) (actual time=32.017..1547.183 rows=89441 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2256072
+                                                   ->  Index Scan using lineitem_pkey_102034 on lineitem_102034 lineitem  (cost=0.43..7.99 rows=8 width=4) (actual time=1.220..1.220 rows=1 loops=89441)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 6.302 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.900 ms, Inlining 0.000 ms, Optimization 2.571 ms, Emission 27.380 ms, Total 32.851 ms
+                         Execution Time: 111062.885 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=108218.64..108264.76 rows=5 width=24) (actual time=110586.868..110593.884 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=108218.64..108264.66 rows=10 width=24) (actual time=110584.519..110593.854 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=107218.61..107263.48 rows=5 width=24) (actual time=110582.101..110591.350 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=107218.61..107233.55 rows=5976 width=16) (actual time=110579.612..110583.594 rows=81630 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3962kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..106843.77 rows=5976 width=16) (actual time=66.097..110506.844 rows=81630 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102090 orders  (cost=0.00..55487.15 rows=35515 width=20) (actual time=62.394..1514.883 rows=89237 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254122
+                                                   ->  Index Scan using lineitem_pkey_102026 on lineitem_102026 lineitem  (cost=0.43..7.55 rows=8 width=4) (actual time=1.219..1.219 rows=1 loops=89237)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.251 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 9.072 ms, Inlining 0.000 ms, Optimization 0.723 ms, Emission 57.956 ms, Total 67.751 ms
+                         Execution Time: 110710.836 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=112762.38..112809.45 rows=5 width=24) (actual time=110495.735..110503.567 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=112762.38..112809.35 rows=10 width=24) (actual time=110492.775..110503.540 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=111762.35..111808.18 rows=5 width=24) (actual time=110489.689..110500.322 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=111762.35..111777.61 rows=6103 width=16) (actual time=110487.074..110491.619 rows=82415 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3980kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..111378.62 rows=6103 width=16) (actual time=36.986..110413.297 rows=82415 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102100 orders  (cost=0.00..55494.05 rows=36562 width=20) (actual time=32.061..1583.517 rows=89910 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254654
+                                                   ->  Index Scan using lineitem_pkey_102036 on lineitem_102036 lineitem  (cost=0.43..8.15 rows=8 width=4) (actual time=1.208..1.208 rows=1 loops=89910)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.129 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 3.117 ms, Inlining 0.000 ms, Optimization 0.708 ms, Emission 26.244 ms, Total 30.069 ms
+                         Execution Time: 110605.766 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113238.90..113286.22 rows=5 width=24) (actual time=110389.843..110397.166 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113238.90..113286.12 rows=10 width=24) (actual time=110387.099..110397.139 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=112238.87..112284.94 rows=5 width=24) (actual time=110386.163..110396.106 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112238.87..112254.21 rows=6135 width=16) (actual time=110382.791..110387.359 rows=82263 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3977kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..111852.90 rows=6135 width=16) (actual time=21.966..110297.667 rows=82263 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102106 orders  (cost=0.00..55563.53 rows=37507 width=20) (actual time=17.222..1505.102 rows=89731 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2255444
+                                                   ->  Index Scan using lineitem_pkey_102042 on lineitem_102042 lineitem  (cost=0.43..8.01 rows=8 width=4) (actual time=1.210..1.210 rows=1 loops=89731)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 5.259 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.316 ms, Inlining 0.000 ms, Optimization 2.049 ms, Emission 12.822 ms, Total 16.188 ms
+                         Execution Time: 110453.265 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=112864.78..112910.68 rows=5 width=24) (actual time=110204.037..110209.225 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=112864.78..112910.58 rows=10 width=24) (actual time=110202.240..110209.209 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=111864.75..111909.40 rows=5 width=24) (actual time=110201.164..110208.016 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=111864.75..111879.62 rows=5947 width=16) (actual time=110199.422..110202.372 rows=82278 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3977kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..111491.94 rows=5947 width=16) (actual time=60.467..110130.177 rows=82278 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102094 orders  (cost=0.00..55490.72 rows=37572 width=20) (actual time=55.057..1407.159 rows=89726 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254569
+                                                   ->  Index Scan using lineitem_pkey_102030 on lineitem_102030 lineitem  (cost=0.43..8.02 rows=8 width=4) (actual time=1.210..1.210 rows=1 loops=89726)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.208 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 6.388 ms, Inlining 0.000 ms, Optimization 0.784 ms, Emission 49.208 ms, Total 56.380 ms
+                         Execution Time: 110334.343 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113216.53..113263.27 rows=5 width=24) (actual time=110115.889..110125.131 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113216.53..113263.17 rows=10 width=24) (actual time=110112.139..110125.087 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=112216.51..112261.99 rows=5 width=24) (actual time=110110.773..110123.596 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112216.51..112231.65 rows=6058 width=16) (actual time=110105.913..110111.860 rows=82339 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3978kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..111835.92 rows=6058 width=16) (actual time=35.444..110022.555 rows=82339 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102102 orders  (cost=0.00..55490.04 rows=37874 width=20) (actual time=29.784..1392.025 rows=89833 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254217
+                                                   ->  Index Scan using lineitem_pkey_102038 on lineitem_102038 lineitem  (cost=0.43..7.97 rows=8 width=4) (actual time=1.207..1.207 rows=1 loops=89833)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 13.606 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 2.082 ms, Inlining 0.000 ms, Optimization 0.734 ms, Emission 26.453 ms, Total 29.269 ms
+                         Execution Time: 110215.790 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=113835.90..113885.01 rows=5 width=24) (actual time=109717.984..109724.215 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=113835.90..113884.91 rows=10 width=24) (actual time=109715.907..109724.196 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=112835.87..112883.74 rows=5 width=24) (actual time=109702.719..109710.882 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=112835.87..112851.81 rows=6375 width=16) (actual time=109700.536..109704.131 rows=81741 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3964kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112433.03 rows=6375 width=16) (actual time=77.576..109628.740 rows=81741 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102082 orders  (cost=0.00..55484.54 rows=37956 width=20) (actual time=75.309..1488.507 rows=89186 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2253622
+                                                   ->  Index Scan using lineitem_pkey_102018 on lineitem_102018 lineitem  (cost=0.43..7.94 rows=8 width=4) (actual time=1.210..1.210 rows=1 loops=89186)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.269 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 7.169 ms, Inlining 0.000 ms, Optimization 0.755 ms, Emission 71.039 ms, Total 78.962 ms
+                         Execution Time: 109851.034 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=114220.94..114270.76 rows=5 width=24) (actual time=109676.115..109683.205 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=114220.94..114270.66 rows=10 width=24) (actual time=109673.182..109683.177 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=113220.91..113269.48 rows=5 width=24) (actual time=109668.284..109678.149 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=113220.91..113237.09 rows=6469 width=16) (actual time=109664.669..109669.302 rows=82313 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3978kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..112811.45 rows=6469 width=16) (actual time=81.352..109570.179 rows=82313 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102084 orders  (cost=0.00..55492.93 rows=38387 width=20) (actual time=79.744..1439.520 rows=89606 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254959
+                                                   ->  Index Scan using lineitem_pkey_102020 on lineitem_102020 lineitem  (cost=0.43..7.88 rows=8 width=4) (actual time=1.205..1.205 rows=1 loops=89606)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 9.604 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 10.672 ms, Inlining 0.000 ms, Optimization 0.944 ms, Emission 74.293 ms, Total 85.910 ms
+                         Execution Time: 109800.822 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.58 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=111971.05..112017.81 rows=5 width=24) (actual time=108953.100..108960.809 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=111971.05..112017.71 rows=10 width=24) (actual time=108949.918..108960.777 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=110971.03..111016.53 rows=5 width=24) (actual time=108945.857..108956.590 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=110971.03..110986.18 rows=6060 width=16) (actual time=108942.580..108947.562 rows=81988 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3970kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..110590.31 rows=6060 width=16) (actual time=62.056..108849.262 rows=81988 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102092 orders  (cost=0.00..55488.01 rows=34866 width=20) (actual time=59.262..1402.499 rows=89603 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254381
+                                                   ->  Index Scan using lineitem_pkey_102028 on lineitem_102028 lineitem  (cost=0.43..8.40 rows=8 width=4) (actual time=1.197..1.197 rows=1 loops=89603)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 5.991 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 5.254 ms, Inlining 0.000 ms, Optimization 0.773 ms, Emission 55.599 ms, Total 61.626 ms
+                         Execution Time: 109078.627 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=121823.31..121864.60 rows=5 width=24) (actual time=107011.063..107031.888 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=121823.31..121864.50 rows=10 width=24) (actual time=106997.965..107031.744 rows=15 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=120823.28..120863.32 rows=5 width=24) (actual time=106952.132..106975.344 rows=5 loops=3)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=120823.28..120836.61 rows=5332 width=16) (actual time=106946.813..106956.354 rows=27331 loops=3)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 1408kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 1409kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 1410kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..120493.22 rows=5332 width=16) (actual time=26.709..106895.066 rows=27331 loops=3)
+                                                   ->  Parallel Seq Scan on orders_102075 orders  (cost=0.00..55491.23 rows=37877 width=20) (actual time=24.573..13687.502 rows=29788 loops=3)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 751671
+                                                   ->  Index Scan using lineitem_pkey_102011 on lineitem_102011 lineitem  (cost=0.43..10.89 rows=9 width=4) (actual time=3.126..3.126 rows=1 loops=89364)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 3.287 ms
+                         JIT:
+                           Functions: 42
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 3.553 ms, Inlining 0.000 ms, Optimization 1.806 ms, Emission 68.114 ms, Total 73.473 ms
+                         Execution Time: 107064.958 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=123927.31..123976.23 rows=5 width=24) (actual time=106997.624..107007.723 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=123927.31..123976.13 rows=10 width=24) (actual time=106995.863..107007.666 rows=15 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=122927.29..122974.95 rows=5 width=24) (actual time=106940.311..106945.577 rows=5 loops=3)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=122927.29..122943.16 rows=6348 width=16) (actual time=106938.557..106940.931 rows=27505 loops=3)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 1391kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 1414kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 1434kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..122526.35 rows=6348 width=16) (actual time=40.065..106898.931 rows=27505 loops=3)
+                                                   ->  Parallel Seq Scan on orders_102079 orders  (cost=0.00..55490.80 rows=37558 width=20) (actual time=37.389..14031.301 rows=29956 loops=3)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 751369
+                                                   ->  Index Scan using lineitem_pkey_102015 on lineitem_102015 lineitem  (cost=0.43..9.93 rows=8 width=4) (actual time=3.097..3.097 rows=1 loops=89867)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.153 ms
+                         JIT:
+                           Functions: 42
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 5.671 ms, Inlining 0.000 ms, Optimization 1.907 ms, Emission 102.990 ms, Total 110.568 ms
+                         Execution Time: 107038.672 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=125505.53..125553.71 rows=5 width=24) (actual time=106712.150..106733.402 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=125505.53..125553.61 rows=10 width=24) (actual time=106705.798..106733.264 rows=15 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 ->  Partial GroupAggregate  (cost=124505.51..124552.43 rows=5 width=24) (actual time=106642.135..106655.568 rows=5 loops=3)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=124505.51..124521.13 rows=6250 width=16) (actual time=106639.182..106644.117 rows=27376 loops=3)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 1405kB
+                                             Worker 0:  Sort Method: quicksort  Memory: 1419kB
+                                             Worker 1:  Sort Method: quicksort  Memory: 1406kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..124111.46 rows=6250 width=16) (actual time=36.899..106598.668 rows=27376 loops=3)
+                                                   ->  Parallel Seq Scan on orders_102077 orders  (cost=0.00..55487.14 rows=36416 width=20) (actual time=36.388..13790.628 rows=29880 loops=3)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 751280
+                                                   ->  Index Scan using lineitem_pkey_102013 on lineitem_102013 lineitem  (cost=0.43..10.57 rows=8 width=4) (actual time=3.103..3.103 rows=1 loops=89640)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 4.172 ms
+                         JIT:
+                           Functions: 42
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 7.022 ms, Inlining 0.000 ms, Optimization 2.028 ms, Emission 94.150 ms, Total 103.200 ms
+                         Execution Time: 106766.520 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=123899.58..123946.78 rows=5 width=24) (actual time=101445.923..101453.445 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=123899.58..123946.68 rows=10 width=24) (actual time=101443.480..101453.413 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=122899.56..122945.50 rows=5 width=24) (actual time=101442.565..101452.344 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=122899.56..122914.86 rows=6119 width=16) (actual time=101439.630..101444.099 rows=82133 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3973kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..122514.70 rows=6119 width=16) (actual time=29.657..101360.317 rows=82133 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102085 orders  (cost=0.00..55480.28 rows=37567 width=20) (actual time=26.835..2515.022 rows=89561 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2252744
+                                                   ->  Index Scan using lineitem_pkey_102021 on lineitem_102021 lineitem  (cost=0.43..10.05 rows=8 width=4) (actual time=1.102..1.102 rows=1 loops=89561)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 4.345 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.723 ms, Inlining 0.000 ms, Optimization 0.574 ms, Emission 25.111 ms, Total 27.408 ms
+                         Execution Time: 101517.142 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=124327.95..124375.17 rows=5 width=24) (actual time=101010.342..101017.636 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=124327.95..124375.07 rows=10 width=24) (actual time=101007.448..101017.608 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=123327.92..123373.90 rows=5 width=24) (actual time=101006.811..101016.877 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=123327.92..123343.23 rows=6123 width=16) (actual time=101003.392..101008.015 rows=82400 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3980kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..122942.79 rows=6123 width=16) (actual time=23.278..100918.044 rows=82400 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102105 orders  (cost=0.00..55495.30 rows=36944 width=20) (actual time=17.293..2720.509 rows=89821 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254926
+                                                   ->  Index Scan using lineitem_pkey_102041 on lineitem_102041 lineitem  (cost=0.43..10.28 rows=8 width=4) (actual time=1.091..1.091 rows=1 loops=89821)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 9.841 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.016 ms, Inlining 0.000 ms, Optimization 0.470 ms, Emission 9.090 ms, Total 10.575 ms
+                         Execution Time: 101042.883 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=126647.86..126698.37 rows=5 width=24) (actual time=100161.295..100170.792 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=126647.86..126698.27 rows=10 width=24) (actual time=100156.883..100170.750 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=125647.83..125697.09 rows=5 width=24) (actual time=100155.973..100169.750 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=125647.83..125664.24 rows=6561 width=16) (actual time=100151.458..100157.698 rows=81602 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3961kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..125231.88 rows=6561 width=16) (actual time=50.350..100075.212 rows=81602 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102083 orders  (cost=0.00..55476.44 rows=39132 width=20) (actual time=47.688..2766.718 rows=89007 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2252569
+                                                   ->  Index Scan using lineitem_pkey_102019 on lineitem_102019 lineitem  (cost=0.43..9.94 rows=8 width=4) (actual time=1.091..1.091 rows=1 loops=89007)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.247 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 7.363 ms, Inlining 0.000 ms, Optimization 0.715 ms, Emission 42.214 ms, Total 50.292 ms
+                         Execution Time: 100247.915 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=120637.25..120678.32 rows=5 width=24) (actual time=100104.107..100112.686 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=120637.25..120678.22 rows=10 width=24) (actual time=100100.727..100112.653 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=119637.23..119677.05 rows=5 width=24) (actual time=100099.725..100111.524 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=119637.23..119650.49 rows=5302 width=16) (actual time=100096.443..100101.758 rows=82173 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3974kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..119309.24 rows=5302 width=16) (actual time=52.531..100018.579 rows=82173 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102087 orders  (cost=0.00..55495.49 rows=36775 width=20) (actual time=45.557..2750.082 rows=89602 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2255301
+                                                   ->  Index Scan using lineitem_pkey_102023 on lineitem_102023 lineitem  (cost=0.43..10.97 rows=9 width=4) (actual time=1.084..1.084 rows=1 loops=89602)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.263 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.270 ms, Inlining 0.000 ms, Optimization 0.805 ms, Emission 41.532 ms, Total 43.606 ms
+                         Execution Time: 100185.028 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=117972.09..118013.38 rows=5 width=24) (actual time=99593.421..99601.529 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=117972.09..118013.28 rows=10 width=24) (actual time=99590.467..99601.498 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=116972.07..117012.11 rows=5 width=24) (actual time=99587.705..99598.610 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=116972.07..116985.40 rows=5332 width=16) (actual time=99584.903..99589.594 rows=82134 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3974kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..116642.00 rows=5332 width=16) (actual time=31.185..99515.497 rows=82134 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102101 orders  (cost=0.00..55565.99 rows=38765 width=20) (actual time=22.954..2747.639 rows=89558 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2256083
+                                                   ->  Index Scan using lineitem_pkey_102037 on lineitem_102037 lineitem  (cost=0.43..10.59 rows=10 width=4) (actual time=1.079..1.079 rows=1 loops=89558)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.351 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.331 ms, Inlining 0.000 ms, Optimization 0.637 ms, Emission 15.493 ms, Total 17.461 ms
+                         Execution Time: 99656.071 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=119905.60..119948.75 rows=5 width=24) (actual time=99565.926..99573.272 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=119905.60..119948.65 rows=10 width=24) (actual time=99563.276..99573.244 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=118905.58..118947.47 rows=5 width=24) (actual time=99562.232..99572.044 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=118905.58..118919.53 rows=5579 width=16) (actual time=99558.721..99563.321 rows=82399 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3980kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..118558.40 rows=5579 width=16) (actual time=65.003..99467.908 rows=82399 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102081 orders  (cost=0.00..55478.87 rows=36771 width=20) (actual time=61.852..2740.576 rows=89812 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2251741
+                                                   ->  Index Scan using lineitem_pkey_102017 on lineitem_102017 lineitem  (cost=0.43..10.63 rows=9 width=4) (actual time=1.075..1.075 rows=1 loops=89812)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.505 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.577 ms, Inlining 0.000 ms, Optimization 0.670 ms, Emission 57.598 ms, Total 59.845 ms
+                         Execution Time: 99643.138 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=125953.28..126002.22 rows=5 width=24) (actual time=99344.985..99351.864 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=125953.28..126002.12 rows=10 width=24) (actual time=99342.048..99351.837 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=124953.25..125000.94 rows=5 width=24) (actual time=99340.918..99350.577 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=124953.25..124969.13 rows=6352 width=16) (actual time=99336.807..99341.589 rows=82040 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3971kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..124552.03 rows=6352 width=16) (actual time=29.631..99251.727 rows=82040 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102089 orders  (cost=0.00..55481.86 rows=37030 width=20) (actual time=24.016..2675.547 rows=89631 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2253305
+                                                   ->  Index Scan using lineitem_pkey_102025 on lineitem_102025 lineitem  (cost=0.43..10.44 rows=8 width=4) (actual time=1.076..1.076 rows=1 loops=89631)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 4.883 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.616 ms, Inlining 0.000 ms, Optimization 0.795 ms, Emission 19.638 ms, Total 22.049 ms
+                         Execution Time: 99402.904 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=122512.34..122561.33 rows=5 width=24) (actual time=98425.459..98433.142 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=122512.34..122561.23 rows=10 width=24) (actual time=98422.464..98433.110 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=121512.31..121560.05 rows=5 width=24) (actual time=98421.661..98432.222 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=121512.31..121528.21 rows=6359 width=16) (actual time=98418.192..98423.068 rows=81868 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3967kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..121110.60 rows=6359 width=16) (actual time=34.273..98335.932 rows=81868 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102097 orders  (cost=0.00..55486.36 rows=37118 width=20) (actual time=34.188..2665.183 rows=89306 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2254377
+                                                   ->  Index Scan using lineitem_pkey_102033 on lineitem_102033 lineitem  (cost=0.43..9.76 rows=8 width=4) (actual time=1.069..1.069 rows=1 loops=89306)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.323 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.428 ms, Inlining 0.000 ms, Optimization 0.704 ms, Emission 27.629 ms, Total 29.761 ms
+                         Execution Time: 98471.500 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=122081.42..122130.57 rows=5 width=24) (actual time=97551.633..97559.299 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=122081.42..122130.47 rows=10 width=24) (actual time=97548.600..97559.267 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=121081.39..121129.29 rows=5 width=24) (actual time=97547.382..97557.915 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=121081.39..121097.34 rows=6380 width=16) (actual time=97543.963..97548.768 rows=81801 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3966kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..120678.20 rows=6380 width=16) (actual time=44.397..97465.308 rows=81801 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102093 orders  (cost=0.00..55478.94 rows=37207 width=20) (actual time=37.321..2599.586 rows=89271 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2252793
+                                                   ->  Index Scan using lineitem_pkey_102029 on lineitem_102029 lineitem  (cost=0.43..9.65 rows=8 width=4) (actual time=1.061..1.061 rows=1 loops=89271)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.353 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.488 ms, Inlining 0.000 ms, Optimization 2.961 ms, Emission 29.696 ms, Total 34.145 ms
+                         Execution Time: 97648.941 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=123464.70..123511.33 rows=5 width=24) (actual time=97259.872..97267.492 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=123464.70..123511.23 rows=10 width=24) (actual time=97256.914..97267.461 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=122464.68..122510.05 rows=5 width=24) (actual time=97256.013..97266.410 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=122464.68..122479.78 rows=6043 width=16) (actual time=97252.461..97257.272 rows=82245 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3976kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..122085.15 rows=6043 width=16) (actual time=28.890..97171.426 rows=82245 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102099 orders  (cost=0.00..55484.69 rows=36368 width=20) (actual time=28.849..2571.004 rows=89633 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2253186
+                                                   ->  Index Scan using lineitem_pkey_102035 on lineitem_102035 lineitem  (cost=0.43..10.31 rows=8 width=4) (actual time=1.053..1.053 rows=1 loops=89633)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 10.322 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.391 ms, Inlining 0.000 ms, Optimization 0.728 ms, Emission 21.054 ms, Total 23.173 ms
+                         Execution Time: 97314.113 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=119618.03..119667.64 rows=5 width=24) (actual time=96616.299..96625.976 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=119618.03..119667.54 rows=10 width=24) (actual time=96611.095..96625.913 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=118618.01..118666.36 rows=5 width=24) (actual time=96609.380..96624.053 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=118618.01..118634.11 rows=6440 width=16) (actual time=96605.202..96611.722 rows=82339 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3978kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..118210.59 rows=6440 width=16) (actual time=34.446..96531.679 rows=82339 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102091 orders  (cost=0.00..55562.32 rows=38438 width=20) (actual time=29.050..2600.680 rows=89755 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2255487
+                                                   ->  Index Scan using lineitem_pkey_102027 on lineitem_102027 lineitem  (cost=0.43..8.86 rows=8 width=4) (actual time=1.045..1.045 rows=1 loops=89755)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.364 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.917 ms, Inlining 0.000 ms, Optimization 1.299 ms, Emission 24.021 ms, Total 27.237 ms
+                         Execution Time: 96695.757 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=118396.67..118437.41 rows=5 width=24) (actual time=58286.492..58293.678 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=118396.67..118437.31 rows=10 width=24) (actual time=58283.119..58293.649 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=117396.65..117436.13 rows=5 width=24) (actual time=58280.327..58290.736 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=117396.65..117409.79 rows=5258 width=16) (actual time=58276.920..58281.691 rows=81720 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3964kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..117071.69 rows=5258 width=16) (actual time=31.361..58202.408 rows=81720 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102103 orders  (cost=0.00..55562.01 rows=36480 width=20) (actual time=23.667..10356.274 rows=89201 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2256189
+                                                   ->  Index Scan using lineitem_pkey_102039 on lineitem_102039 lineitem  (cost=0.43..10.57 rows=9 width=4) (actual time=0.535..0.535 rows=1 loops=89201)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.374 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.527 ms, Inlining 0.000 ms, Optimization 0.728 ms, Emission 16.189 ms, Total 18.444 ms
+                         Execution Time: 58344.925 ms
+               ->  Task
+                     Tuple data received from node: 115 bytes
+                     Node: host=192.168.1.19 port=5432 dbname=tpch
+                     ->  Finalize GroupAggregate  (cost=124808.93..124856.68 rows=5 width=24) (actual time=57134.092..57142.718 rows=5 loops=1)
+                           Group Key: orders.o_orderpriority
+                           ->  Gather Merge  (cost=124808.93..124856.58 rows=10 width=24) (actual time=57130.806..57142.684 rows=5 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 0
+                                 ->  Partial GroupAggregate  (cost=123808.90..123855.41 rows=5 width=24) (actual time=57129.929..57141.684 rows=5 loops=1)
+                                       Group Key: orders.o_orderpriority
+                                       ->  Sort  (cost=123808.90..123824.39 rows=6194 width=16) (actual time=57125.379..57130.851 rows=82357 loops=1)
+                                             Sort Key: orders.o_orderpriority
+                                             Sort Method: quicksort  Memory: 3979kB
+                                             ->  Nested Loop Semi Join  (cost=0.43..123418.78 rows=6194 width=16) (actual time=50.367..57055.006 rows=82357 loops=1)
+                                                   ->  Parallel Seq Scan on orders_102095 orders  (cost=0.00..55478.83 rows=38789 width=20) (actual time=31.399..10776.302 rows=89764 loops=1)
+                                                         Filter: ((o_orderdate >= '1993-07-01'::date) AND (o_orderdate < '1993-10-01'::date))
+                                                         Rows Removed by Filter: 2251976
+                                                   ->  Index Scan using lineitem_pkey_102031 on lineitem_102031 lineitem  (cost=0.43..9.88 rows=8 width=4) (actual time=0.514..0.514 rows=1 loops=89764)
+                                                         Index Cond: (l_orderkey = orders.o_orderkey)
+                                                         Filter: (l_commitdate < l_receiptdate)
+                                                         Rows Removed by Filter: 1
+                         Planning Time: 1.181 ms
+                         JIT:
+                           Functions: 16
+                           Options: Inlining false, Optimization false, Expressions true, Deforming true
+                           Timing: Generation 1.188 ms, Inlining 0.000 ms, Optimization 0.661 ms, Emission 23.494 ms, Total 25.343 ms
+                         Execution Time: 57198.324 ms
+ Planning Time: 4.017 ms
+ Execution Time: 118157.409 ms
+(888 rows)
+
